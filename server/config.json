@@ -1,0 +1,9 @@
+{
+  "rds_host": "projdb.cttt1g7nvzfb.us-east-1.rds.amazonaws.com",
+  "rds_port": "3306",
+  "rds_user": "admin_proj",
+  "rds_password" : "ridfeq-tyjmo6-Poxtyh",
+  "rds_db": "Netflix_searching_recommendation_DB",
+  "server_host": "localhost",
+  "server_port":"8080"
+}
