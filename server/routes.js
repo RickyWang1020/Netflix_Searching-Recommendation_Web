@@ -283,6 +283,267 @@ const select_movies = async function(req, res) {
   });
 };
 
+// Route 11: GET /top_cast
+// In the homepage, show fixed top 20 cast by the number of movies
+const top_cast = async function(req, res) {
+    connection.query(`
+        SELECT person.primaryName, COUNT(*) AS movie_count
+        FROM movie_principals
+        JOIN person ON movie_principals.nconst = person.nconst
+        WHERE movie_principals.category = 'actor'
+        GROUP BY person.nconst
+        ORDER BY movie_count DESC
+        LIMIT 20;
+        `, (err, data) => {
+            if (err || data.length === 0) {
+            console.log(err);
+            res.json({});
+            } else {
+            res.json(data); 
+            }
+        });
+    };
+
+// Route 12: GET /top_cast_rating
+// In the homepage, show fixed top 20 cast by the average rating
+const top_cast_rating = async function(req, res) {
+    connection.query(`
+        SELECT p.primaryName, r.avg_rate
+        FROM merged_genre_rating r
+        JOIN movie_principals mp ON r.tconst = mp.tconst
+        JOIN person p ON p.nconst = mp.nconst
+        WHERE category = 'actor'
+        GROUP BY p.nconst
+        ORDER BY r.avg_rate DESC
+        LIMIT 20;
+    `, (err, data) => {
+        if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+        } else {
+        res.json(data); 
+        }
+    });
+    };
+
+
+// Route 13: GET /cast_page/cast
+// In the cast page, show cast in pages. Each page has 10 cast
+const cast_page = async function(req, res) {
+    const page = req.query.page;
+    const pageSize = req.query.page_size ?? 10;
+    const start = (page - 1) * pageSize;
+  
+    connection.query(`
+        SELECT p.primaryName, r.avg_rate
+        FROM merged_genre_rating r
+        JOIN movie_principals mp ON r.tconst = mp.tconst
+        JOIN person p ON p.nconst = mp.nconst
+        WHERE category = 'actor'
+        GROUP BY p.nconst
+        ORDER BY r.avg_rate DESC
+        LIMIT ${pageSize} OFFSET ${start}`, (err, data) => { 
+        if (err || data.length === 0) {
+            console.log(err);
+            res.json({});
+        } else {
+            res.json(data); 
+        }
+    })
+  };
+
+
+// Route 14: GET /cast_page/:nconst
+// Select cast by nconst (may be used to pop up cast card)
+const cast = async function(req, res) {
+    const nconst = req.params.nconst; 
+    console.log('nconst: ', nconst);
+  
+    connection.query(`
+        SELECT p.primaryName, r.avg_rate
+        FROM merged_genre_rating r
+        JOIN movie_principals mp ON r.tconst = mp.tconst
+        JOIN person p ON p.nconst = mp.nconst
+        WHERE category = 'actor'
+        GROUP BY p.nconst
+        ORDER BY r.avg_rate DESC
+        WHERE person.nconst = '${nconst}'`, (err, data) => {
+        if (err || data.length === 0) {
+            console.log(err);
+            res.json({});
+        } else {
+            res.json(data);
+        }
+    });
+  };
+
+// Route 15: GET /cast_page/cast_filter
+// Filter cast by the number of movies, whether it is adult, release year, and genre
+const cast_filter = async function(req, res) {
+    const numMovie = req.query.num_movie ?? 0;
+    const avgRate = req.query.avg_rate ?? 0;
+    const isAdult = req.query.isAdult === 'true' ? 1 : 0;
+    const releaseYearLow = req.query.release_year_low ?? 1900;
+    const releaseYearHigh = req.query.release_year_high ?? 2023;
+  
+    let genreCondition = '';
+    if (req.query.genre) {
+      genreCondition = `r.genre = '${req.query.genre}'`;
+    }
+  
+    let sortCondition = '';
+    if (req.query.sortRating) {
+      genreCondition = `ORDER BY avg_rate DESC`;
+    }
+  
+    connection.query(`
+        SELECT p.primaryName, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
+        FROM merged_genre_rating r
+        JOIN movie_principals mp ON r.tconst = mp.tconst
+        JOIN person p ON p.nconst = mp.nconst
+        WHERE mp.category = 'actor' AND ${genreCondition} AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} 
+        GROUP BY p.nconst
+        HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
+        ${sortCondition}
+        `, (err, data) => { 
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json(data); 
+      }
+    })
+  };
+
+
+// Route 16: GET /cast_page/top_writer
+// In the cast page, it shows top writers by the average rating in page
+const top_writer = async function(req, res) {
+    const page = req.query.page;
+    const pageSize = req.query.page_size ?? 10;
+    const start = (page - 1) * pageSize;
+
+    connection.query(`
+        SELECT p.primaryName AS writer_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
+        FROM writer w
+        JOIN merged_genre_rating r ON w.tconst = r.tconst
+        JOIN person p on w.nconst = p.nconst
+        GROUP BY p.nconst
+        ORDER BY avg_rate DESC, num_movie DESC
+        LIMIT ${pageSize} OFFSET ${start}
+        `, (err, data) => {
+            if (err || data.length === 0) {
+            console.log(err);
+            res.json({});
+            } else {
+            res.json(data); 
+            }
+        });
+    };
+
+
+// Route 17: GET /cast_page/writer_filter
+// Filter writer by the number of movies, whether it is adult, release year, and genre
+const writer_filter = async function(req, res) {
+    const numMovie = req.query.num_movie ?? 0;
+    const avgRate = req.query.avg_rate ?? 0;
+    const isAdult = req.query.isAdult === 'true' ? 1 : 0;
+    const releaseYearLow = req.query.release_year_low ?? 1900;
+    const releaseYearHigh = req.query.release_year_high ?? 2023;
+  
+    let genreCondition = '';
+    if (req.query.genre) {
+      genreCondition = `r.genre = '${req.query.genre}'`;
+    }
+  
+    let sortCondition = '';
+    if (req.query.sortRating) {
+      genreCondition = `ORDER BY avg_rate DESC, num_movie DESC`;
+    }
+  
+    connection.query(`
+        SELECT p.primaryName AS writer_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
+        FROM writer w
+        JOIN merged_genre_rating r ON w.tconst = r.tconst
+        JOIN person p on w.nconst = p.nconst
+        WHERE ${genreCondition} AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} 
+        GROUP BY p.nconst
+        HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
+        ${sortCondition}
+        `, (err, data) => { 
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json(data); 
+      }
+    })
+  };
+
+
+// Route 18: GET /cast_page/top_director
+// In the cast page, it shows top directors by the average rating
+const top_director = async function(req, res) {
+    const page = req.query.page;
+    const pageSize = req.query.page_size ?? 10;
+    const start = (page - 1) * pageSize;
+
+    connection.query(`
+        SELECT p.primaryName AS director_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
+        FROM director w
+        JOIN merged_genre_rating r ON w.tconst = r.tconst
+        JOIN person p on w.nconst = p.nconst
+        GROUP BY p.nconst
+        ORDER BY avg_rate DESC, num_movie DESC
+        LIMIT ${pageSize} OFFSET ${start}
+        `, (err, data) => {
+            if (err || data.length === 0) {
+            console.log(err);
+            res.json({});
+            } else {
+            res.json(data); 
+            }
+        });
+    };
+
+// Route 19: GET /cast_page/director_filter
+// Filter director by the number of movies, whether it is adult, release year, and genre
+const director_filter = async function(req, res) {
+    const numMovie = req.query.num_movie ?? 0;
+    const avgRate = req.query.avg_rate ?? 0;
+    const isAdult = req.query.isAdult === 'true' ? 1 : 0;
+    const releaseYearLow = req.query.release_year_low ?? 1900;
+    const releaseYearHigh = req.query.release_year_high ?? 2023;
+  
+    let genreCondition = '';
+    if (req.query.genre) {
+      genreCondition = `r.genre = '${req.query.genre}'`;
+    }
+  
+    let sortCondition = '';
+    if (req.query.sortRating) {
+      genreCondition = `ORDER BY avg_rate DESC, num_movie DESC`;
+    }
+  
+    connection.query(`
+        SELECT p.primaryName AS director_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
+        FROM director w
+        JOIN merged_genre_rating r ON w.tconst = r.tconst
+        JOIN person p on w.nconst = p.nconst
+        WHERE ${genreCondition} AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} 
+        GROUP BY p.nconst
+        HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
+        ${sortCondition}
+        `, (err, data) => { 
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json(data); 
+      }
+    })
+  };
+
 
 module.exports = {
   top_movies,
@@ -294,5 +555,14 @@ module.exports = {
   genre_runtime_change,
   movie_rating_distribution,
   select_movies,
-  movie_defeat
+  movie_defeat,
+  top_cast,
+  top_cast_rating,
+  cast_page, 
+  cast, 
+  cast_filter, 
+  top_writer, 
+  writer_filter, 
+  top_director, 
+  director_filter
 }
