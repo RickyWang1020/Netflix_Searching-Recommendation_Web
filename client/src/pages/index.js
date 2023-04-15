@@ -2,7 +2,37 @@
 import React from "react";
 import styled from "styled-components";
 import background from "../assets/background.jpg";
+import { Carousel } from 'antd';
+import StatsList from "../components/StatsList";
+import MovieList from "../components/MovieList";
+import PeopleList from "../components/PeopleList";
 
+
+const contentStyle = {
+  height: '200px',
+  color: '#fff',
+  lineHeight: '200px',
+  textAlign: 'center',
+  background: 'rgba(0, 0, 0, 0.5)',
+};
+
+const carouselContainer = {
+  width: '100vw',
+  position: 'relative',
+  margin: '80px auto 0',
+};
+const panelsContainer = {
+  width: '100vw',
+  height: 'calc(100vh - 320px)',
+  position: 'relative',
+  alignItems: 'center',
+  justifyContent: 'center',
+  display: 'flex'
+};
+const panels = {
+  flex: 1,
+  height: '100%',
+};
 
 const BackgroundImage = styled.div`
   background-image: url(${background});
@@ -17,13 +47,13 @@ const MainContainter = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  // justify-content: center;
   height: 100vh;
   width: 100vw;
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.2);
 `;
 const Welcome = styled.h1`
   color: #fff;
@@ -36,9 +66,28 @@ const Home = () => {
   return (
     <BackgroundImage>
       <MainContainter>
-        <Welcome>
+        {/* <Welcome>
           Welcome to Netflix Recommendation System
-        </Welcome>
+        </Welcome> */}
+        <Carousel style={carouselContainer} autoplay>
+          <div>
+            <h3 style={contentStyle}>Recommended Movie 1</h3>
+          </div>
+          <div>
+            <h3 style={contentStyle}>Recommended Movie 2</h3>
+          </div>
+          <div>
+            <h3 style={contentStyle}>Recommended Movie 3</h3>
+          </div>
+          <div>
+            <h3 style={contentStyle}>Recommended Movie 4</h3>
+          </div>
+        </Carousel>
+        <div style={panelsContainer}>
+          <StatsList style={panels} />
+          <MovieList style={panels} />
+          <PeopleList style={panels} />
+        </div>
       </MainContainter>
     </BackgroundImage>
   );

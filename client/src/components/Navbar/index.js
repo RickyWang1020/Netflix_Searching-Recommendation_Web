@@ -4,15 +4,15 @@ import { Nav, NavLink, NavMenu } from "./Navbar";
   
 const Navbar = () => {
   return (
-      <Nav class="nav-bar">
+      <Nav>
         <NavMenu>
-          <NavLink to="/" activeStyle>
+          <NavLink to="/">
             Home
           </NavLink>
-          <NavLink to="/Movies" activeStyle>
+          <NavLink to="/Movies">
             Movies
           </NavLink>
-          <NavLink to="/People" activeStyle>
+          <NavLink to="/People">
             Cast and Crews
           </NavLink>
         </NavMenu>

@@ -20,10 +20,10 @@ const listItem = {
     textAlign: 'center'
 };
 
-const PeopleList = () => {
+const StatsList = () => {
     return (
         <div style={container}>
-            <h1>People List</h1>
+            <h1>Stats List</h1>
             <ul>
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
                     return <li key={index} style={listItem}>Item {item}</li>
@@ -31,6 +31,6 @@ const PeopleList = () => {
             </ul>
         </div>
     );
-};
+}
 
-export default PeopleList;
+export default StatsList;
