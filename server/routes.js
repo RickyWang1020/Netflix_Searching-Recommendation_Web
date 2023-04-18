@@ -18,8 +18,9 @@ connection.connect((err) => err && console.log(err));
 // Notes: merged_genre_rating is already sorted by avg_rate in descending order
 const top_movies = async function(req, res) {
   connection.query(`
-  SELECT DISTINCT movie_id, title, year_of_release, isAdult, runtimeMinutes, avg_rate
+  SELECT DISTINCT movie_id, title, year_of_release, isAdult, runtimeMinutes, avg_rate, GROUP_CONCAT(DISTINCT genre SEPARATOR ',') AS genres
     FROM merged_genre_rating
+    GROUP BY movie_id
     LIMIT 10;
   `, (err, data) => {
     if (err || data.length === 0) {
@@ -38,14 +39,11 @@ const top_movies = async function(req, res) {
 // In the movie page, show movies in pages. Each page has 10 movies
 // Notes: each movie has several genres so I didn't show genres in this page
 const movie_page = async function(req, res) {
-  const page = req.query.page;
-  const pageSize = req.query.page_size ?? 10;
-  const start = (page - 1) * pageSize;
 
   connection.query(`
-    SELECT DISTINCT movie_id, title, year_of_release, isAdult, runtimeMinutes, avg_rate
+    SELECT DISTINCT movie_id, title, year_of_release, isAdult, runtimeMinutes, avg_rate, GROUP_CONCAT(DISTINCT genre SEPARATOR ',') AS genres
     FROM merged_genre_rating
-    LIMIT ${pageSize} OFFSET ${start}`, (err, data) => { 
+    GROUP BY movie_id;`, (err, data) => { 
     if (err || data.length === 0) {
       console.log(err);
       res.json({});
@@ -148,11 +146,6 @@ const filter_movies = async function(req, res) {
     genreCondition = `genre = '${req.query.genre}' AND`;
   }
 
-  let sortCondition = '';
-  if (req.query.sortRating) {
-    genreCondition = `ORDER BY avg_rate ASC`;
-  }
-
   connection.query(`
     SELECT movie_id, title, year_of_release, isAdult, runtimeMinutes, genre, avg_rate
     FROM merged_genre_rating
@@ -161,7 +154,6 @@ const filter_movies = async function(req, res) {
       year_of_release BETWEEN ${ReleaseYearLow} AND ${ReleaseYearHigh} AND
       runtimeMinutes BETWEEN ${runtimeLow} AND ${runtimeHigh} AND
       isAdult <= ${isAdult} 
-    ${sortCondition}
       `, (err, data) => { 
     if (err || data.length === 0) {
       console.log(err);
@@ -185,7 +177,6 @@ const count_top_genres = async function(req, res) {
     FROM merged_genre_rating
     WHERE avg_rate >= ${rate_bar}
     GROUP BY genre
-    ORDER BY genre_count DESC
     LIMIT 5;
     `, (err, data) => {
     if (err || data.length === 0) {
@@ -210,8 +201,7 @@ const genre_rating_change = async function(req, res) {
     SELECT year_of_release, AVG(avg_rate) as average_rating
     FROM merged_genre_rating
     ${genreCondition}
-    GROUP BY year_of_release
-    ORDER BY year_of_release;
+    GROUP BY year_of_release;
     `, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
@@ -235,8 +225,7 @@ const genre_runtime_change = async function(req, res) {
     SELECT year_of_release, AVG(runtimeMinutes) as average_runtime
     FROM merged_genre_rating
     ${genreCondition}
-    GROUP BY year_of_release
-    ORDER BY year_of_release;
+    GROUP BY year_of_release;
     `, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
@@ -292,7 +281,6 @@ const top_cast = async function(req, res) {
         JOIN person ON movie_principals.nconst = person.nconst
         WHERE movie_principals.category = 'actor'
         GROUP BY person.nconst
-        ORDER BY movie_count DESC
         LIMIT 20;
         `, (err, data) => {
             if (err || data.length === 0) {
@@ -314,7 +302,6 @@ const top_cast_rating = async function(req, res) {
         JOIN person p ON p.nconst = mp.nconst
         WHERE category = 'actor'
         GROUP BY p.nconst
-        ORDER BY r.avg_rate DESC
         LIMIT 20;
     `, (err, data) => {
         if (err || data.length === 0) {
@@ -341,7 +328,6 @@ const cast_page = async function(req, res) {
         JOIN person p ON p.nconst = mp.nconst
         WHERE category = 'actor'
         GROUP BY p.nconst
-        ORDER BY r.avg_rate DESC
         LIMIT ${pageSize} OFFSET ${start}`, (err, data) => { 
         if (err || data.length === 0) {
             console.log(err);
@@ -366,7 +352,6 @@ const cast = async function(req, res) {
         JOIN person p ON p.nconst = mp.nconst
         WHERE category = 'actor'
         GROUP BY p.nconst
-        ORDER BY r.avg_rate DESC
         WHERE person.nconst = '${nconst}'`, (err, data) => {
         if (err || data.length === 0) {
             console.log(err);
@@ -390,12 +375,7 @@ const cast_filter = async function(req, res) {
     if (req.query.genre) {
       genreCondition = `r.genre = '${req.query.genre}'`;
     }
-  
-    let sortCondition = '';
-    if (req.query.sortRating) {
-      genreCondition = `ORDER BY avg_rate DESC`;
-    }
-  
+
     connection.query(`
         SELECT p.primaryName, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
         FROM merged_genre_rating r
@@ -404,7 +384,6 @@ const cast_filter = async function(req, res) {
         WHERE mp.category = 'actor' AND ${genreCondition} AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} 
         GROUP BY p.nconst
         HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
-        ${sortCondition}
         `, (err, data) => { 
       if (err || data.length === 0) {
         console.log(err);
@@ -429,7 +408,6 @@ const top_writer = async function(req, res) {
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
         GROUP BY p.nconst
-        ORDER BY avg_rate DESC, num_movie DESC
         LIMIT ${pageSize} OFFSET ${start}
         `, (err, data) => {
             if (err || data.length === 0) {
@@ -456,11 +434,6 @@ const writer_filter = async function(req, res) {
       genreCondition = `r.genre = '${req.query.genre}'`;
     }
   
-    let sortCondition = '';
-    if (req.query.sortRating) {
-      genreCondition = `ORDER BY avg_rate DESC, num_movie DESC`;
-    }
-  
     connection.query(`
         SELECT p.primaryName AS writer_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
         FROM writer w
@@ -469,7 +442,6 @@ const writer_filter = async function(req, res) {
         WHERE ${genreCondition} AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} 
         GROUP BY p.nconst
         HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
-        ${sortCondition}
         `, (err, data) => { 
       if (err || data.length === 0) {
         console.log(err);
@@ -494,7 +466,6 @@ const top_director = async function(req, res) {
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
         GROUP BY p.nconst
-        ORDER BY avg_rate DESC, num_movie DESC
         LIMIT ${pageSize} OFFSET ${start}
         `, (err, data) => {
             if (err || data.length === 0) {
@@ -519,12 +490,7 @@ const director_filter = async function(req, res) {
     if (req.query.genre) {
       genreCondition = `r.genre = '${req.query.genre}'`;
     }
-  
-    let sortCondition = '';
-    if (req.query.sortRating) {
-      genreCondition = `ORDER BY avg_rate DESC, num_movie DESC`;
-    }
-  
+
     connection.query(`
         SELECT p.primaryName AS director_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
         FROM director w
@@ -533,7 +499,6 @@ const director_filter = async function(req, res) {
         WHERE ${genreCondition} AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} 
         GROUP BY p.nconst
         HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
-        ${sortCondition}
         `, (err, data) => { 
       if (err || data.length === 0) {
         console.log(err);
