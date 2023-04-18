@@ -236,7 +236,6 @@ const genre_runtime_change = async function(req, res) {
   });
 };
 
-
 // Route 10: GET /movie_after/:year
 // complex query: select movies after 2000 (default) so that it has a high movie rating and low runtime
 const select_movies = async function(req, res) {
@@ -281,8 +280,7 @@ const top_cast = async function(req, res) {
         JOIN person ON movie_principals.nconst = person.nconst
         WHERE movie_principals.category = 'actor'
         GROUP BY person.nconst
-        LIMIT 10;
-        `, (err, data) => {
+        LIMIT 10;`, (err, data) => {
             if (err || data.length === 0) {
             console.log(err);
             res.json({});
@@ -302,8 +300,7 @@ const top_cast_rating = async function(req, res) {
         JOIN person p ON p.nconst = mp.nconst
         WHERE category = 'actor'
         GROUP BY p.nconst
-        LIMIT 10;
-    `, (err, data) => {
+        LIMIT 10;`, (err, data) => {
         if (err || data.length === 0) {
         console.log(err);
         res.json({});
@@ -317,9 +314,6 @@ const top_cast_rating = async function(req, res) {
 // Route 13: GET /cast_page
 // In the cast page, show cast in pages. Each page has 10 cast
 const cast_page = async function(req, res) {
-    const page = req.query.page;
-    const pageSize = req.query.page_size ?? 10;
-    const start = (page - 1) * pageSize;
 
     connection.query(`
         SELECT p.primaryName, r.avg_rate
@@ -327,8 +321,7 @@ const cast_page = async function(req, res) {
         JOIN movie_principals mp ON r.tconst = mp.tconst
         JOIN person p ON p.nconst = mp.nconst
         WHERE category = 'actor'
-        GROUP BY p.nconst
-        LIMIT ${pageSize} OFFSET ${start}`, (err, data) => {
+        GROUP BY p.nconst`, (err, data) => {
         if (err || data.length === 0) {
             console.log(err);
             res.json({});
@@ -398,9 +391,6 @@ const cast_filter = async function(req, res) {
 // Route 16: GET /top_writer
 // In the cast page, it shows top writers by the average rating in page
 const top_writer = async function(req, res) {
-    const page = req.query.page;
-    const pageSize = req.query.page_size ?? 10;
-    const start = (page - 1) * pageSize;
 
     connection.query(`
         SELECT p.primaryName AS writer_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
@@ -408,7 +398,6 @@ const top_writer = async function(req, res) {
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
         GROUP BY p.nconst
-        LIMIT ${pageSize} OFFSET ${start}
         `, (err, data) => {
             if (err || data.length === 0) {
             console.log(err);
@@ -456,9 +445,6 @@ const writer_filter = async function(req, res) {
 // Route 18: GET /top_director
 // In the cast page, it shows top directors by the average rating
 const top_director = async function(req, res) {
-    const page = req.query.page;
-    const pageSize = req.query.page_size ?? 10;
-    const start = (page - 1) * pageSize;
 
     connection.query(`
         SELECT p.primaryName AS director_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
@@ -466,7 +452,6 @@ const top_director = async function(req, res) {
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
         GROUP BY p.nconst
-        LIMIT ${pageSize} OFFSET ${start}
         `, (err, data) => {
             if (err || data.length === 0) {
             console.log(err);
