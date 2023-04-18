@@ -148,13 +148,17 @@ const filter_movies = async function(req, res) {
   }
 
   connection.query(`
-    SELECT movie_id, title, year_of_release, isAdult, runtimeMinutes, genre, avg_rate
+  SELECT movie_id, title, year_of_release, isAdult, runtimeMinutes, GROUP_CONCAT(DISTINCT genre SEPARATOR ',') AS genres, avg_rate
     FROM merged_genre_rating
-    WHERE ${genreCondition}
-      primaryTitle LIKE '%${title}%' AND
-      year_of_release BETWEEN ${ReleaseYearLow} AND ${ReleaseYearHigh} AND
-      runtimeMinutes BETWEEN ${runtimeLow} AND ${runtimeHigh} AND
-      isAdult <= ${isAdult}
+    WHERE movie_id IN (
+        SELECT movie_id
+        FROM merged_genre_rating
+        WHERE ${genreCondition}
+        primaryTitle LIKE '%${title}%' AND
+        year_of_release BETWEEN ${ReleaseYearLow} AND ${ReleaseYearHigh} AND
+        runtimeMinutes BETWEEN ${runtimeLow} AND ${runtimeHigh} AND
+        isAdult <= ${isAdult})
+    GROUP BY movie_id;
       `, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
