@@ -21,6 +21,7 @@ const top_movies = async function(req, res) {
   SELECT DISTINCT movie_id, title, year_of_release, isAdult, runtimeMinutes, avg_rate, GROUP_CONCAT(DISTINCT genre SEPARATOR ',') AS genres
     FROM merged_genre_rating
     GROUP BY movie_id
+    ORDER BY avg_rate DESC
     LIMIT 10;
   `, (err, data) => {
     if (err || data.length === 0) {
@@ -278,8 +279,9 @@ const top_cast = async function(req, res) {
         SELECT person.primaryName, COUNT(*) AS movie_count
         FROM movie_principals
         JOIN person ON movie_principals.nconst = person.nconst
-        WHERE movie_principals.category = 'actor'
+        WHERE movie_principals.category = 'actor' OR movie_principals.category = 'actress'
         GROUP BY person.nconst
+        ORDER BY movie_count DESC
         LIMIT 10;`, (err, data) => {
             if (err || data.length === 0) {
             console.log(err);
@@ -298,8 +300,9 @@ const top_cast_rating = async function(req, res) {
         FROM merged_genre_rating r
         JOIN movie_principals mp ON r.tconst = mp.tconst
         JOIN person p ON p.nconst = mp.nconst
-        WHERE category = 'actor'
+        WHERE category = 'actor' OR category = 'actress'
         GROUP BY p.nconst
+        ORDER BY r.avg_rate DESC
         LIMIT 10;`, (err, data) => {
         if (err || data.length === 0) {
         console.log(err);
@@ -320,7 +323,7 @@ const cast_page = async function(req, res) {
         FROM merged_genre_rating r
         JOIN movie_principals mp ON r.tconst = mp.tconst
         JOIN person p ON p.nconst = mp.nconst
-        WHERE category = 'actor'
+        WHERE category = 'actor' OR category = 'actress'
         GROUP BY p.nconst`, (err, data) => {
         if (err || data.length === 0) {
             console.log(err);
@@ -343,7 +346,7 @@ const cast = async function(req, res) {
         FROM merged_genre_rating r
         JOIN movie_principals mp ON r.tconst = mp.tconst
         JOIN person p ON p.nconst = mp.nconst
-        WHERE category = 'actor'
+        WHERE category = 'actor' OR category = 'actress'
         GROUP BY p.nconst
         WHERE person.nconst = '${nconst}'`, (err, data) => {
         if (err || data.length === 0) {
@@ -374,7 +377,7 @@ const cast_filter = async function(req, res) {
         FROM merged_genre_rating r
         JOIN movie_principals mp ON r.tconst = mp.tconst
         JOIN person p ON p.nconst = mp.nconst
-        WHERE mp.category = 'actor' AND ${genreCondition} AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow}
+        WHERE (mp.category = 'actor' OR mp.category = 'actress') AND ${genreCondition} AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow}
         GROUP BY p.nconst
         HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
         `, (err, data) => {
