@@ -4,7 +4,7 @@ import styled from "styled-components";
 import background from "../assets/background.jpg";
 import { Carousel } from 'antd';
 import StatsList from "../components/StatsList";
-import MovieList from "../components/MovieList";
+import TopMovieList from "../components/TopMovieList";
 import PeopleList from "../components/PeopleList";
 
 
@@ -85,7 +85,7 @@ const Home = () => {
         </Carousel>
         <div style={panelsContainer}>
           <StatsList style={panels} />
-          <MovieList style={panels} />
+          <TopMovieList style={panels} />
           <PeopleList style={panels} />
         </div>
       </MainContainter>
