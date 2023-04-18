@@ -28,7 +28,7 @@ app.get('/popup/genre_runtime_change/:genre?', routes.genre_runtime_change);
 app.get('/popup/movie_after/:year?', routes.select_movies);
 
 //routes for cast part
-app,get('/top_cast', routes.top_cast);
+app.get('/top_cast', routes.top_cast);
 app.get('/top_cast_rating', routes.top_cast_rating)
 app.get('/cast_page/cast', routes.cast_page)
 app.get('/cast_page/:nconst', routes.cast)
