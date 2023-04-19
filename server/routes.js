@@ -140,7 +140,7 @@ const filter_movies = async function(req, res) {
   const ReleaseYearHigh = req.query.releaseyear_high ?? 2005;
   const runtimeLow = req.query.runtime_low ?? 0;
   const runtimeHigh = req.query.runtime_high ?? 1335;
-  const isAdult = req.query.isAdult === 'true' ? 1 : 0;
+  const isAdult = req.query.isAdult === 'true' ? 0 : 1;
 
   let genreCondition = '';
   if (req.query.genre) {
