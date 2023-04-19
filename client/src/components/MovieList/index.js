@@ -184,7 +184,7 @@ const MovieList = () => {
             </Grid>
             <Grid item xs={4}>
                 <FormControlLabel
-                label='Filter out Adult-only?'
+                label='Only Non-Adult Movies/Series'
                 control={<Checkbox checked={isAdult} onChange={(e) => setIsAdult(e.target.checked)} />}
                 />
             </Grid>
