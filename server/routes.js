@@ -280,34 +280,27 @@ const select_movies = async function(req, res) {
 // In the homepage, show fixed top 10 cast by the number of movies
 const top_cast = async function(req, res) {
     connection.query(`
-        SELECT person.primaryName, COUNT(*) AS movie_count
-        FROM movie_principals
-        JOIN person ON movie_principals.nconst = person.nconst
-        WHERE movie_principals.category = 'actor' OR movie_principals.category = 'actress'
-        GROUP BY person.nconst
-        ORDER BY movie_count DESC
-        LIMIT 10;`, (err, data) => {
-            if (err || data.length === 0) {
-            console.log(err);
-            res.json({});
-            } else {
-            res.json(data);
-            }
-        });
-    };
+        SELECT primaryName, movie_count
+        FROM top_cast_num
+        LIMIT 10;
+        `, (err, data) => {
+        if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+        } else {
+        res.json(data);
+        }
+    });
+};
 
 // Route 12: GET /top_cast_rating
 // In the homepage, show fixed top 10 cast by the average rating
 const top_cast_rating = async function(req, res) {
     connection.query(`
-        SELECT p.primaryName, r.avg_rate
-        FROM merged_genre_rating r
-        JOIN movie_principals mp ON r.tconst = mp.tconst
-        JOIN person p ON p.nconst = mp.nconst
-        WHERE category = 'actor' OR category = 'actress'
-        GROUP BY p.nconst
-        ORDER BY r.avg_rate DESC
-        LIMIT 10;`, (err, data) => {
+        SELECT primaryName, avg_rate
+        FROM cast_movie_rating
+        LIMIT 10;
+        `, (err, data) => {
         if (err || data.length === 0) {
         console.log(err);
         res.json({});
@@ -323,12 +316,9 @@ const top_cast_rating = async function(req, res) {
 const cast_page = async function(req, res) {
 
     connection.query(`
-        SELECT p.primaryName, r.avg_rate
-        FROM merged_genre_rating r
-        JOIN movie_principals mp ON r.tconst = mp.tconst
-        JOIN person p ON p.nconst = mp.nconst
-        WHERE category = 'actor' OR category = 'actress'
-        GROUP BY p.nconst`, (err, data) => {
+        SELECT primaryName, avg_rate
+        FROM cast_movie_rating
+        `, (err, data) => {
         if (err || data.length === 0) {
             console.log(err);
             res.json({});
@@ -346,13 +336,9 @@ const cast = async function(req, res) {
     console.log('nconst: ', nconst);
 
     connection.query(`
-        SELECT p.primaryName, r.avg_rate
-        FROM merged_genre_rating r
-        JOIN movie_principals mp ON r.tconst = mp.tconst
-        JOIN person p ON p.nconst = mp.nconst
-        WHERE category = 'actor' OR category = 'actress'
-        GROUP BY p.nconst
-        WHERE person.nconst = '${nconst}'`, (err, data) => {
+        SELECT primaryName, avg_rate
+        FROM cast_movie_rating
+        WHERE nconst = '${nconst}'`, (err, data) => {
         if (err || data.length === 0) {
             console.log(err);
             res.json({});
