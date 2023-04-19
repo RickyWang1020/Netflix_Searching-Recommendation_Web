@@ -88,6 +88,7 @@ const Home = () => {
           <TopMovieList style={panels} />
           <PeopleList style={panels} />
         </div>
+        <p>CIS5500 Final Project Team 25: Liancheng Gong, Jinyun Shan, Xinran Wang, Zhaoze Wang</p>
       </MainContainter>
     </BackgroundImage>
   );

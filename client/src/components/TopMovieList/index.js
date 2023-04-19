@@ -56,12 +56,21 @@ const TopMovieList = () => {
             key: 'avg_rate',
             render: (value) => value ? `${value}` : 'N/A',
         },
+        {
+            title: 'Genres',
+            dataIndex: 'genres',
+            key: 'genres',
+            render: (value) => value ? `${value}` : 'N/A',
+        },
     ]
 
     return (
         <div style={container}>
-            <h1>Top 10 Movies/Series with Highest Average Ratings</h1>
-            <Table dataSource={data} columns={columns} pagination={false} />
+            <h2>Top 10 Movies/Series with Highest Average Ratings</h2>
+            <Table dataSource={data.length > 0 ? data : []} 
+                columns={columns} 
+                pagination={false} 
+            />
         </div>
     );
 };

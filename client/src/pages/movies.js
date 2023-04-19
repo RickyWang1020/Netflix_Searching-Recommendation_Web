@@ -3,7 +3,6 @@ import React from 'react';
 import styled from "styled-components";
 import background from "../assets/background.jpg";
 import MovieList from "../components/MovieList";
-import MovieFilter from "../components/MovieFilter";
 
 const BackgroundImage = styled.div`
   background-image: url(${background});
@@ -34,7 +33,6 @@ const Movies = () => {
   return (
     <BackgroundImage>
       <MainContainter>
-        <MovieFilter />
         <MovieList />
       </MainContainter>
     </BackgroundImage>
