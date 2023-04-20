@@ -1,9 +1,9 @@
 
 import React from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
+import Navbar from './components/Navbar';
 import Home from './pages';
 import Movies from './pages/movies';
 import People from './pages/people';

@@ -1,0 +1,6 @@
+.movie-list-container {
+    width: 100%;
+    height: calc(100vh-200px);
+    padding: 0 50px;
+    box-sizing: border-box;
+}

@@ -1,27 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Table } from 'antd';
+import { Table, ConfigProvider } from 'antd';
 import { Button, Checkbox, Container, FormControlLabel, Grid, Slider, TextField, MenuItem, Select } from '@mui/material';
+import movieGenres from '../../assets/utils/movieGenres';
 const config = require('../../config.json');
-
-const container = {
-    width: '100%',
-    height: '100%',
-    background: 'rgba(0, 0, 0, 0.6)',
-    color: '#fff',
-    margin: '20px',
-    boxSizing: 'border-box',
-    borderRadius: '10px',
-    padding: '10px',
-    textAlign: 'center'
-};
-
-const listItem = {
-    listStyle: 'none',
-    margin: '10px',
-    padding: '10px',
-    color: '#fff',
-    textAlign: 'center'
-};
 
 const MovieList = () => {
     const [data, setData] = useState([]);
@@ -141,107 +122,90 @@ const MovieList = () => {
         if (pagination.pageSize !== tableParams.pagination?.pageSize) {
             setData([]);
         }
-      };
-
-    const movieGenres = [
-        'Action',
-        'Adult',
-        'Adventure',
-        'Animation',
-        'Biography',
-        'Comedy',
-        'Crime',
-        'Documentary',
-        'Drama',
-        'Family',
-        'Fantasy',
-        'Film-Noir',
-        'Game-Show',
-        'History',
-        'Horror',
-        'Music',
-        'Musical',
-        'Mystery',
-        'News',
-        'Reality-TV',
-        'Romance',
-        'Sci-Fi',
-        'Short',
-        'Sport',
-        'Talk-Show',
-        'Thriller',
-        'War',
-        'Western',
-    ];
+    };
 
     return (
-        <Container>
-        {/* {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />} */}
-        <h2>Filter Movies/Series</h2>
-        <Grid container spacing={8}>
-            <Grid item xs={8}>
-                <TextField label='Title' value={title} onChange={(e) => setTitle(e.target.value)} style={{ width: "100%" }}/>
+        <div className="moive-list-container">
+        {/* {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />}
+        {/* <h2>Filter Movies/Series</h2> */}
+        {/* <Grid container spacing={8}>
+                <Grid item xs={8}>
+                    <TextField label='Title' value={title} onChange={(e) => setTitle(e.target.value)} style={{ width: "100%" }}/>
+                </Grid>
+                <Grid item xs={4}>
+                    <FormControlLabel
+                    label='Only Non-Adult Movies/Series'
+                    control={<Checkbox checked={isAdult} onChange={(e) => setIsAdult(e.target.checked)} />}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <p>Release Year</p>
+                    <Slider
+                    value={yearOfRelease}
+                    min={1914}
+                    max={2005}
+                    step={1}
+                    onChange={(e, newValue) => setYearOfRelease(newValue)}
+                    valueLabelDisplay='auto'
+                    valueLabelFormat={value => value}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <p>Runtime (min)</p>
+                    <Slider
+                    value={runtime}
+                    min={0}
+                    max={1335}
+                    step={5}
+                    onChange={(e, newValue) => setRuntime(newValue)}
+                    valueLabelDisplay='auto'
+                    valueLabelFormat={value => value}
+                    />
+                </Grid>
+                <Grid item xs={3}>
+                <p>Select Movie/Series Genre:</p>
+                </Grid>
+                <Grid item xs={3}>
+                    <Select
+                        value={genre}
+                        onChange={(e) => setGenre(e.target.value)}
+                        inputProps={{ 'aria-label': 'Select one option' }}
+                        renderValue={option => option}
+                        fullWidth
+                    >
+                        {movieGenres.map((genre, index) => (
+                            <MenuItem key={genre} value={genre}> {genre} </MenuItem>
+                        ))}
+                    </Select>
+                </Grid>
+                <Grid item xs={6}>
+                    <Button onClick={() => search() } style={{ left: '50%', transform: 'translateX(-50%)' }}>
+                        Search
+                    </Button>
+                </Grid>
             </Grid>
-            <Grid item xs={4}>
-                <FormControlLabel
-                label='Only Non-Adult Movies/Series'
-                control={<Checkbox checked={isAdult} onChange={(e) => setIsAdult(e.target.checked)} />}
+            <ConfigProvider
+                    theme={{
+                        token: {
+                            colorBgContainer: 'rgba(0, 0, 0, 0)',
+                            colorBorderSecondary: '#fff',
+                            colorFillAlter: '#333',
+                            // colorBgContainer: '#fff',
+                            colorText: '#fff',
+                            colorIconHover: 'red',
+                            borderRadius: '0'
+                        },
+                    }}
+                    >
+                <Table
+                    columns={columns}
+                    dataSource={data.length > 0 ? data : []}
+                    pagination={tableParams.pagination}
+                    loading={loading}
+                    onChange={handleTableChange}
                 />
-            </Grid>
-            <Grid item xs={6}>
-                <p>Release Year</p>
-                <Slider
-                value={yearOfRelease}
-                min={1914}
-                max={2005}
-                step={1}
-                onChange={(e, newValue) => setYearOfRelease(newValue)}
-                valueLabelDisplay='auto'
-                valueLabelFormat={value => value}
-                />
-            </Grid>
-            <Grid item xs={6}>
-                <p>Runtime (min)</p>
-                <Slider
-                value={runtime}
-                min={0}
-                max={1335}
-                step={5}
-                onChange={(e, newValue) => setRuntime(newValue)}
-                valueLabelDisplay='auto'
-                valueLabelFormat={value => value}
-                />
-            </Grid>
-            <Grid item xs={3}>
-            <p>Select Movie/Series Genre:</p>
-            </Grid>
-            <Grid item xs={3}>
-                <Select
-                    value={genre}
-                    onChange={(e) => setGenre(e.target.value)}
-                    inputProps={{ 'aria-label': 'Select one option' }}
-                    renderValue={option => option}
-                    fullWidth
-                >
-                    {movieGenres.map((genre, index) => (
-                        <MenuItem key={genre} value={genre}> {genre} </MenuItem>
-                    ))}
-                </Select>
-            </Grid>
-            <Grid item xs={6}>
-                <Button onClick={() => search() } style={{ left: '50%', transform: 'translateX(-50%)' }}>
-                    Search
-                </Button>
-            </Grid>
-        </Grid>
-        <Table
-            columns={columns}
-            dataSource={data.length > 0 ? data : []}
-            pagination={tableParams.pagination}
-            loading={loading}
-            onChange={handleTableChange}
-        />
-        </Container>
+            </ConfigProvider> */}
+        </div>
     );
 };
 

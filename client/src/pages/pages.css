@@ -1,0 +1,27 @@
+
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    /* padding: 100px 40px 0; */
+    box-sizing: border-box;
+    color: #fff;
+}
+
+.page-background {
+    background-image: url("../assets/images/background.jpg");
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+}
