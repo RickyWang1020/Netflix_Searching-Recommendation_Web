@@ -312,7 +312,7 @@ const top_cast_rating = async function(req, res) {
 
 
 // Route 13: GET /cast_page
-// In the cast page, show cast in pages. Each page has 10 cast
+// In the cast page, show cast in pages
 const cast_page = async function(req, res) {
 
     connection.query(`
@@ -359,7 +359,7 @@ const cast_filter = async function(req, res) {
 
     let genreCondition = '';
     if (req.query.genre) {
-      genreCondition = `r.genre = '${req.query.genre}'`;
+      genreCondition = `r.genre = '${req.query.genre}' AND`;
     }
 
     connection.query(`
@@ -367,7 +367,7 @@ const cast_filter = async function(req, res) {
         FROM merged_genre_rating r
         JOIN movie_principals mp ON r.tconst = mp.tconst
         JOIN person p ON p.nconst = mp.nconst
-        WHERE (mp.category = 'actor' OR mp.category = 'actress') AND ${genreCondition} AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow}
+        WHERE ${genreCondition} (mp.category = 'actor' OR mp.category = 'actress') AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow}
         GROUP BY p.nconst
         HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
         `, (err, data) => {
@@ -413,7 +413,7 @@ const writer_filter = async function(req, res) {
 
     let genreCondition = '';
     if (req.query.genre) {
-      genreCondition = `r.genre = '${req.query.genre}'`;
+      genreCondition = `r.genre = '${req.query.genre}' AND`;
     }
 
     connection.query(`
@@ -421,7 +421,7 @@ const writer_filter = async function(req, res) {
         FROM writer w
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
-        WHERE ${genreCondition} AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow}
+        WHERE ${genreCondition} r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow}
         GROUP BY p.nconst
         HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
         `, (err, data) => {
@@ -466,7 +466,7 @@ const director_filter = async function(req, res) {
 
     let genreCondition = '';
     if (req.query.genre) {
-      genreCondition = `r.genre = '${req.query.genre}'`;
+      genreCondition = `r.genre = '${req.query.genre}' AND`;
     }
 
     connection.query(`
@@ -474,7 +474,7 @@ const director_filter = async function(req, res) {
         FROM director w
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
-        WHERE ${genreCondition} AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow}
+        WHERE ${genreCondition} r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow}
         GROUP BY p.nconst
         HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
         `, (err, data) => {
