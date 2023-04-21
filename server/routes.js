@@ -363,7 +363,7 @@ const cast_filter = async function(req, res) {
     }
 
     connection.query(`
-        SELECT p.primaryName, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
+        SELECT primaryName, COUNT(DISTINCT r.tconst) AS num_movie, avg_rate, birthYear, deathYear, title AS represent_work, characters AS represent_char
         FROM merged_genre_rating r
         JOIN movie_principals mp ON r.tconst = mp.tconst
         JOIN person p ON p.nconst = mp.nconst
@@ -417,7 +417,7 @@ const writer_filter = async function(req, res) {
     }
 
     connection.query(`
-        SELECT p.primaryName AS writer_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
+        SELECT primaryName, COUNT(DISTINCT r.tconst) AS num_movie, avg_rate, birthYear, deathYear, title AS represent_work
         FROM writer w
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
@@ -470,7 +470,7 @@ const director_filter = async function(req, res) {
     }
 
     connection.query(`
-        SELECT p.primaryName AS director_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
+        SELECT primaryName, COUNT(DISTINCT r.tconst) AS num_movie, avg_rate, birthYear, deathYear, title AS represent_work
         FROM director w
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
