@@ -2,14 +2,15 @@ import React from 'react';
 
 const bottomBar = {
     width: '100vw',
-    height: '70px',
+    height: '50px',
     position: 'absolute',
     bottom: 0,
     textAlign: 'center',
-    lineHeight: '70px',
+    lineHeight: '50px',
     color: '#fff',
     fontWeight: 'bold',
-    background: 'rgba(0, 0, 0, 0.5)',
+    fontSize: '12px',
+    background: 'rgba(0, 0, 0, 1)',
 };
 
 const BottomBar = () => {

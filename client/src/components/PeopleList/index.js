@@ -25,7 +25,7 @@ const PeopleList = () => {
         <div style={container}>
             <h1>People List</h1>
             <ul>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+                {[1, 2, 3, 4].map((item, index) => {
                     return <li key={index} style={listItem}>Item {item}</li>
                 })}
             </ul>

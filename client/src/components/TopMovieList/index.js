@@ -59,10 +59,9 @@ const TopMovieList = () => {
                     token: {
                         colorBgContainer: 'rgba(0, 0, 0, 0)',
                         colorBorderSecondary: '#fff',
-                        colorFillAlter: '#333',
-                        // colorBgContainer: '#fff',
+                        fontWeightStrong: 900,
+                        // colorFillAlter: 'rgba(100, 100, 100, 0.5)',
                         colorText: '#fff',
-                        colorIconHover: 'red',
                         borderRadius: '0'
                     },
                 }}

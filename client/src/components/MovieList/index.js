@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Table, ConfigProvider } from 'antd';
-import { Button, Checkbox, Container, FormControlLabel, Grid, Slider, TextField, MenuItem, Select } from '@mui/material';
+import { Table, DatePicker, Slider, Checkbox, ConfigProvider, Select } from 'antd';
+// import { Button, Checkbox, Container, FormControlLabel, Grid, Slider, TextField, MenuItem, Select } from '@mui/material';
 import movieGenres from '../../assets/utils/movieGenres';
+import './index.css';
 const config = require('../../config.json');
+const { RangePicker } = DatePicker;
 
 const MovieList = () => {
     const [data, setData] = useState([]);
@@ -68,11 +70,13 @@ const MovieList = () => {
             title: 'Title',
             dataIndex: 'title',
             key: 'title',
+            width: '30%',
         },
         {
             title: 'Release Year',
             dataIndex: 'year_of_release',
             key: 'year_of_release',
+            width: '10%',
             sorter: {
                 compare: (a, b) => a.year_of_release - b.year_of_release,
                 multiple: 1,
@@ -80,35 +84,39 @@ const MovieList = () => {
             render: (value) => value ? `${value}` : 'N/A',
         },
         {
-            title: 'Runtime (min)',
+            title: 'Runtime',
             dataIndex: 'runtimeMinutes',
             key: 'runtimeMinutes',
+            width: '10%',
             sorter: {
                 compare: (a, b) => a.runtimeMinutes - b.runtimeMinutes,
                 multiple: 1,
             },
-            render: (value) => value ? `${value}` : 'N/A',
+            render: (value) => value ? `${value} min` : 'N/A',
         },
         {
             title: 'Is Adult?',
             dataIndex: 'isAdult',
             key: 'isAdult',
+            width: '10%',
             render: (value) => value === 1 ? 'Yes' : 'No',
         },
         {
-            title: 'Average Rating (out of 5)',
+            title: 'Average Rating',
             dataIndex: 'avg_rate',
             key: 'avg_rate',
+            width: '10%',
             sorter: {
                 compare: (a, b) => a.avg_rate - b.avg_rate,
                 multiple: 1,
             },
-            render: (value) => value ? `${value}` : 'N/A',
+            render: (value) => value ? `${value.toFixed(2)}/5` : 'N/A',
         },
         {
             title: 'Genres',
             dataIndex: 'genres',
             key: 'genres',
+            width: '30%',
             render: (value) => value ? `${value}` : 'N/A',
         },
     ]
@@ -125,10 +133,10 @@ const MovieList = () => {
     };
 
     return (
-        <div className="moive-list-container">
+        <div className="movie-list-container">
         {/* {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />}
         {/* <h2>Filter Movies/Series</h2> */}
-        {/* <Grid container spacing={8}>
+        {/* <Grid class="filter" container spacing={8}>
                 <Grid item xs={8}>
                     <TextField label='Title' value={title} onChange={(e) => setTitle(e.target.value)} style={{ width: "100%" }}/>
                 </Grid>
@@ -183,28 +191,54 @@ const MovieList = () => {
                         Search
                     </Button>
                 </Grid>
-            </Grid>
-            <ConfigProvider
+            </Grid> */}
+            <div className="movie-list-filter">
+                <div className="filter-item" style={{ width: '400px' }}>
+                    <div className="title" style={{ marginLeft: '0' }}>Year: </div>
+                    <ConfigProvider theme={{token: {colorTextDisabled: '#777'}}}>
+                        <RangePicker className="selector" picker="year"/>
+                    </ConfigProvider>
+                </div>
+                <div className="filter-item" style={{ width: '300px' }}>
+                    <div className="title">Runtime: </div>
+                    <ConfigProvider theme={{token: { colorPrimary: '#bbb'}}}>
+                        <Slider className="selector" defaultValue={1335}/>
+                    </ConfigProvider>
+                </div>
+                <div className="filter-item" style={{ width: '200px' }}>
+                    <ConfigProvider theme={{token: {colorPrimary: '#1677ff'}}}>
+                        <Checkbox className="selector"> Only Non-Adult Content </Checkbox>
+                    </ConfigProvider>
+                </div>
+                <div className="filter-item">
+                    <div className="title">Genre: </div>
+                    <Select
+                        className="selector"
+                        defaultValue={movieGenres[0]}
+                        style={{ width: '200px' }}
+                        // onChange={handleChange}
+                        options={movieGenres.map((genre, index) => ({value: genre, label: genre}))}
+                    />
+                </div>
+            </div>
+            <div className="movie-list-table">
+                <ConfigProvider
                     theme={{
                         token: {
-                            colorBgContainer: 'rgba(0, 0, 0, 0)',
-                            colorBorderSecondary: '#fff',
-                            colorFillAlter: '#333',
-                            // colorBgContainer: '#fff',
-                            colorText: '#fff',
-                            colorIconHover: 'red',
-                            borderRadius: '0'
+                            colorFillAlter: 'rgba(100, 100, 100, 0.5)',
+                            colorFillContent: 'rgba(150, 150, 150, 0.6)',
+                            controlItemBgActive: '#444',
                         },
-                    }}
-                    >
-                <Table
-                    columns={columns}
-                    dataSource={data.length > 0 ? data : []}
-                    pagination={tableParams.pagination}
-                    loading={loading}
-                    onChange={handleTableChange}
-                />
-            </ConfigProvider> */}
+                    }}>
+                    <Table
+                        columns={columns}
+                        dataSource={data.length > 0 ? data : []}
+                        pagination={tableParams.pagination}
+                        loading={loading}
+                        onChange={handleTableChange}
+                    />
+                </ConfigProvider>
+            </div>
         </div>
     );
 };

@@ -18,7 +18,7 @@ const contentStyle = {
 const carouselContainer = {
   width: '100vw',
   position: 'relative',
-  margin: '0',
+  margin: '10px 0 0',
 };
 const panelsContainer = {
   width: '100vw',
