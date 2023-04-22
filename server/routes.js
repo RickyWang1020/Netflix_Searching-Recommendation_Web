@@ -356,10 +356,17 @@ const cast_filter = async function(req, res) {
     const isAdult = req.query.isAdult === 'true' ? 1 : 0;
     const releaseYearLow = req.query.release_year_low ?? 1900;
     const releaseYearHigh = req.query.release_year_high ?? 2023;
+    const birthYearHigh = req.query.birth_year_high ?? 2023;
+    const birthYearLow = req.query.birth_year_low ?? 1500;
 
     let genreCondition = '';
     if (req.query.genre) {
       genreCondition = `r.genre = '${req.query.genre}' AND`;
+    }
+
+    let sexCondition = '';
+    if (req.query.sex) {
+      sexCondition = `mp.category = '${req.query.sex}' AND`;
     }
 
     connection.query(`
@@ -367,7 +374,7 @@ const cast_filter = async function(req, res) {
         FROM merged_genre_rating r
         JOIN movie_principals mp ON r.tconst = mp.tconst
         JOIN person p ON p.nconst = mp.nconst
-        WHERE ${genreCondition} (mp.category = 'actor' OR mp.category = 'actress') AND r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow}
+        WHERE ${genreCondition} ${sexCondition} r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} AND birthYear >= ${birthYearLow} AND birthYear <= ${birthYearHigh}
         GROUP BY p.nconst
         HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
         `, (err, data) => {
@@ -410,6 +417,8 @@ const writer_filter = async function(req, res) {
     const isAdult = req.query.isAdult === 'true' ? 1 : 0;
     const releaseYearLow = req.query.release_year_low ?? 1900;
     const releaseYearHigh = req.query.release_year_high ?? 2023;
+    const birthYearHigh = req.query.birth_year_high ?? 2023;
+    const birthYearLow = req.query.birth_year_low ?? 1500;
 
     let genreCondition = '';
     if (req.query.genre) {
@@ -421,7 +430,7 @@ const writer_filter = async function(req, res) {
         FROM writer w
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
-        WHERE ${genreCondition} r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow}
+        WHERE ${genreCondition} r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} AND birthYear >= ${birthYearLow} AND birthYear <= ${birthYearHigh}
         GROUP BY p.nconst
         HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
         `, (err, data) => {
@@ -463,6 +472,8 @@ const director_filter = async function(req, res) {
     const isAdult = req.query.isAdult === 'true' ? 1 : 0;
     const releaseYearLow = req.query.release_year_low ?? 1900;
     const releaseYearHigh = req.query.release_year_high ?? 2023;
+    const birthYearHigh = req.query.birth_year_high ?? 2023;
+    const birthYearLow = req.query.birth_year_low ?? 1500;
 
     let genreCondition = '';
     if (req.query.genre) {
@@ -474,7 +485,7 @@ const director_filter = async function(req, res) {
         FROM director w
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
-        WHERE ${genreCondition} r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow}
+        WHERE ${genreCondition} r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} AND birthYear >= ${birthYearLow} AND birthYear <= ${birthYearHigh}
         GROUP BY p.nconst
         HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
         `, (err, data) => {
