@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, DatePicker, Slider, Checkbox, ConfigProvider, Select } from 'antd';
+import { Table, DatePicker, Slider, Checkbox, Button, Select, ConfigProvider } from 'antd';
 // import { Button, Checkbox, Container, FormControlLabel, Grid, Slider, TextField, MenuItem, Select } from '@mui/material';
 import movieGenres from '../../assets/utils/movieGenres';
 import './index.css';
@@ -132,6 +132,12 @@ const MovieList = () => {
         }
     };
 
+    const handleCalenderChange = (yearTuple) => {
+        if (yearTuple[0] && yearTuple[1]) {
+            setYearOfRelease([yearTuple[0].$y, yearTuple[1].$y]);
+        }
+    }
+
     return (
         <div className="movie-list-container">
         {/* {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />}
@@ -193,32 +199,35 @@ const MovieList = () => {
                 </Grid>
             </Grid> */}
             <div className="movie-list-filter">
-                <div className="filter-item" style={{ width: '400px' }}>
+                <div className="filter-item" style={{ width: '25%' }}>
                     <div className="title" style={{ marginLeft: '0' }}>Year: </div>
                     <ConfigProvider theme={{token: {colorTextDisabled: '#777'}}}>
-                        <RangePicker className="selector" picker="year"/>
+                        <RangePicker className="selector" picker="year" 
+                            onCalendarChange={(e) => {handleCalenderChange(e)}}/>
                     </ConfigProvider>
                 </div>
-                <div className="filter-item" style={{ width: '300px' }}>
+                <div className="filter-item" style={{ width: '20%' }}>
                     <div className="title">Runtime: </div>
                     <ConfigProvider theme={{token: { colorPrimary: '#bbb'}}}>
-                        <Slider className="selector" defaultValue={1335}/>
+                        <Slider className="selector" range defaultValue={[0, 200]} max={1335} min={0} step={5}
+                            onAfterChange={(e) => {setRuntime(e)}}/>
                     </ConfigProvider>
                 </div>
-                <div className="filter-item" style={{ width: '200px' }}>
+                <div className="filter-item" style={{ width: '20%' }}>
                     <ConfigProvider theme={{token: {colorPrimary: '#1677ff'}}}>
-                        <Checkbox className="selector"> Only Non-Adult Content </Checkbox>
+                        <Checkbox className="selector" onChange={(e) => {setIsAdult(e.target.checked)}}> Only Non-Adult Content </Checkbox>
                     </ConfigProvider>
                 </div>
-                <div className="filter-item">
+                <div className="filter-item" style={{ width: '20%' }}>
                     <div className="title">Genre: </div>
                     <Select
                         className="selector"
-                        defaultValue={movieGenres[0]}
-                        style={{ width: '200px' }}
-                        // onChange={handleChange}
+                        onChange={(e) => {setGenre(e)}}
                         options={movieGenres.map((genre, index) => ({value: genre, label: genre}))}
                     />
+                </div>
+                <div className="filter-item">
+                    <Button className="selector" onClick={() => search()}>Filter</Button>
                 </div>
             </div>
             <div className="movie-list-table">
