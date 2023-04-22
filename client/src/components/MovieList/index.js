@@ -41,7 +41,7 @@ const MovieList = () => {
 
     useEffect(() => {
         fetchData();
-    }, [JSON.stringify(tableParams)]);
+    }, []);
 
     const search = () => {
         setLoading(true);
@@ -63,7 +63,7 @@ const MovieList = () => {
                     },
                 });
             });
-    }
+    };
 
     const columns = [
         {
@@ -79,7 +79,7 @@ const MovieList = () => {
             width: '10%',
             sorter: {
                 compare: (a, b) => a.year_of_release - b.year_of_release,
-                multiple: 1,
+                multiple: 2,
             },
             render: (value) => value ? `${value}` : 'N/A',
         },
@@ -90,7 +90,7 @@ const MovieList = () => {
             width: '10%',
             sorter: {
                 compare: (a, b) => a.runtimeMinutes - b.runtimeMinutes,
-                multiple: 1,
+                multiple: 3,
             },
             render: (value) => value ? `${value} min` : 'N/A',
         },

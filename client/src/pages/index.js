@@ -4,7 +4,7 @@ import './pages.css'
 import { Carousel } from 'antd';
 import StatsList from "../components/StatsList";
 import TopMovieList from "../components/TopMovieList";
-import PeopleList from "../components/PeopleList";
+import TopPeopleList from "../components/TopPeopleList";
 import ButtomBar from "../components/ButtomBar";
 
 
@@ -53,7 +53,7 @@ const Home = () => {
         <div style={panelsContainer}>
           <StatsList style={panels} />
           <TopMovieList style={panels} />
-          <PeopleList style={panels} />
+          <TopPeopleList style={panels} />
         </div>
       </div>
       <ButtomBar />
