@@ -351,22 +351,22 @@ const cast = async function(req, res) {
 // Route 15: GET /cast_filter
 // Filter cast by the number of movies, whether it is adult, release year, and genre
 const cast_filter = async function(req, res) {
-    const numMovie = req.query.num_movie ?? 0;
-    const avgRate = req.query.avg_rate ?? 0;
-    const isAdult = req.query.isAdult === 'true' ? 1 : 0;
-    const releaseYearLow = req.query.release_year_low ?? 1900;
-    const releaseYearHigh = req.query.release_year_high ?? 2023;
-    const birthYearHigh = req.query.birth_year_high ?? 2023;
+    const numMovieLow = req.query.num_movie_low ?? 0;
+    const numMovieHigh = req.query.num_movie_high ?? 11000;
+    const avgRateLow = req.query.avg_rate_low ?? 0;
+    const avgRateHigh = req.query.avg_rate_high ?? 5;
     const birthYearLow = req.query.birth_year_low ?? 1500;
+    const birthYearHigh = req.query.birth_year_high ?? 2023;
+    const isAdult = req.query.isAdult === 'true' ? 1 : 0;
 
-    let genreCondition = '';
-    if (req.query.genre) {
-      genreCondition = `r.genre = '${req.query.genre}' AND`;
-    }
-
-    let sexCondition = '';
+    let sexCondition = `(mp.category = 'actor' OR mp.category = 'actress') AND`;
     if (req.query.sex) {
-      sexCondition = `mp.category = '${req.query.sex}' AND`;
+      if (req.query.sex === 'male') {
+        sexCondition = `mp.category = 'actor' AND`;
+      }
+      else if (req.query.sex === 'female') {
+        sexCondition = `mp.category = 'actress' AND`;
+      }
     }
 
     connection.query(`
@@ -374,9 +374,9 @@ const cast_filter = async function(req, res) {
         FROM merged_genre_rating r
         JOIN movie_principals mp ON r.tconst = mp.tconst
         JOIN person p ON p.nconst = mp.nconst
-        WHERE ${genreCondition} ${sexCondition} r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} AND birthYear >= ${birthYearLow} AND birthYear <= ${birthYearHigh}
+        WHERE ${sexCondition} r.isAdult <= ${isAdult} AND birthYear >= ${birthYearLow} AND birthYear <= ${birthYearHigh}
         GROUP BY p.nconst
-        HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
+        HAVING num_movie >= ${numMovieLow} AND num_movie <= ${numMovieHigh} AND avg_rate >= ${avgRateLow} AND avg_rate <= ${avgRateHigh}
         `, (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
