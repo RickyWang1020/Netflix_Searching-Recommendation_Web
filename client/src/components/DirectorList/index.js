@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Table, DatePicker, Slider, Checkbox, Button, Select, ConfigProvider } from 'antd';
+import movieGenres from '../../assets/utils/movieGenres';
 import './index.css';
 const config = require('../../config.json');
 const { RangePicker } = DatePicker;
 
-const CastList = () => {
+const DirectorList = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [numOfMovie, setNumOfMovie] = useState([0, 11000]);
+    const [numOfMovie, setNumOfMovie] = useState([0, 36]);
     const [avgRate, setAvgRate] = useState([0, 5]);
-    const [sex, setSex] = useState('');
-    const [isAdult, setIsAdult] = useState(false);
+    const [genre, setGenre] = useState('');
     const [birthYear, setBirthYear] = useState([1500, 2023]);
     
     const [tableParams, setTableParams] = useState({
@@ -22,7 +22,7 @@ const CastList = () => {
   
     const fetchData = () => {
         setLoading(true);
-        fetch(`http://${config.server_host}:${config.server_port}/cast_filter`)
+        fetch(`http://${config.server_host}:${config.server_port}/director_filter`)
           .then((res) => res.json())
           .then(data => {
             setData(data);
@@ -43,11 +43,10 @@ const CastList = () => {
 
     const search = () => {
         setLoading(true);
-        fetch(`http://${config.server_host}:${config.server_port}/cast_filter?num_movie_low=${numOfMovie[0]}&num_movie_high=${numOfMovie[1]}` + 
+        fetch(`http://${config.server_host}:${config.server_port}/director_filter?num_movie_low=${numOfMovie[0]}&num_movie_high=${numOfMovie[1]}` + 
             `&birth_year_low=${birthYear[0]}&birth_year_high=${birthYear[1]}` + 
             `&avg_rate_low=${avgRate[0]}&avg_rate_high=${avgRate[1]}` + 
-            `&sex=${sex}` + 
-            `&isAdult=${isAdult}`
+            `&genre=${genre}`
         )
             .then((res) => res.json())
             .then(data => {
@@ -93,7 +92,7 @@ const CastList = () => {
             render: (value) => value ? `${value}` : 'N/A',
         },
         {
-            title: 'No. of Movies/Series Acted',
+            title: 'No. of Movies/Series Directed',
             dataIndex: 'num_movie',
             key: 'num_movie',
             width: '10%',
@@ -104,7 +103,7 @@ const CastList = () => {
             render: (value) => value ? `${value}` : 'N/A',
         },
         {
-            title: 'Average Rating on Acted Movies/Series',
+            title: 'Average Rating on Directed Movies/Series',
             dataIndex: 'avg_rate',
             key: 'avg_rate',
             width: '10%',
@@ -120,22 +119,6 @@ const CastList = () => {
             key: 'represent_work',
             width: '10%',
             render: (value) => value ? `${value}` : 'N/A',
-        },
-        {
-            title: 'Famous Character(s)',
-            dataIndex: 'represent_char',
-            key: 'represent_char',
-            width: '25%',
-            render: (value) => {
-                if (typeof value === 'string' && value !== '') {
-                    const cleanedValue = value.replace(/[\[\]"']/g, '');
-                    const valueArray = cleanedValue.split(', ');
-                    return valueArray.map(str => str.trim());
-                } 
-                else {
-                    return 'N/A';
-                }
-            },
         },
     ]
 
@@ -157,18 +140,10 @@ const CastList = () => {
     }
 
     return (
-        <div className="cast-list-container">
-            <div className="cast-list-filter">
-                <div className="filter-item" style={{ width: '10%' }}>
-                    <div className="title" style={{ marginLeft: '0' }}>Sex: </div>
-                    <Select
-                        className="selector"
-                        onChange={(e) => {setSex(e)}}
-                        options={[{value: '', label: ""}, {value: 'male', label: "Male"}, {value: 'female', label: "Female"}]}
-                    />
-                </div>
+        <div className="director-list-container">
+            <div className="director-list-filter">
                 <div className="filter-item" style={{ width: '25%' }}>
-                    <div className="title" style={{ marginLeft: '1' }}>Birth Year: </div>
+                    <div className="title" style={{ marginLeft: '0' }}>Birth Year: </div>
                     <ConfigProvider theme={{token: {colorTextDisabled: '#777'}}}>
                         <RangePicker className="selector" picker="year" 
                             onCalendarChange={(e) => {handleCalenderChange(e)}}/>
@@ -184,20 +159,23 @@ const CastList = () => {
                 <div className="filter-item" style={{ width: '20%' }}>
                     <div className="title">No. of Movies/Series: </div>
                     <ConfigProvider theme={{token: { colorPrimary: '#bbb'}}}>
-                        <Slider className="selector" range defaultValue={[0, 11000]} max={11000} min={0} step={10}
+                        <Slider className="selector" range defaultValue={[0, 36]} max={36} min={0} step={1}
                             onAfterChange={(e) => {setNumOfMovie(e)}}/>
                     </ConfigProvider>
                 </div>
                 <div className="filter-item" style={{ width: '20%' }}>
-                    <ConfigProvider theme={{token: {colorPrimary: '#1677ff'}}}>
-                        <Checkbox className="selector" onChange={(e) => {setIsAdult(e.target.checked)}}> Count Only Non-Adult Content </Checkbox>
-                    </ConfigProvider>
+                    <div className="title">Genre: </div>
+                    <Select
+                        className="selector"
+                        onChange={(e) => {setGenre(e)}}
+                        options={movieGenres.map((genre, index) => ({value: genre, label: genre}))}
+                    />
                 </div>
                 <div className="filter-item">
                     <Button className="selector" onClick={() => search()}>Filter</Button>
                 </div>
             </div>
-            <div className="cast-list-table">
+            <div className="director-list-table">
                 <ConfigProvider
                     theme={{
                         token: {
@@ -219,4 +197,4 @@ const CastList = () => {
     );
 };
 
-export default CastList;
+export default DirectorList;

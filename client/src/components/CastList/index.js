@@ -10,7 +10,6 @@ const CastList = () => {
     const [numOfMovie, setNumOfMovie] = useState([0, 11000]);
     const [avgRate, setAvgRate] = useState([0, 5]);
     const [sex, setSex] = useState('');
-    const [isAdult, setIsAdult] = useState(false);
     const [birthYear, setBirthYear] = useState([1500, 2023]);
     
     const [tableParams, setTableParams] = useState({
@@ -46,8 +45,7 @@ const CastList = () => {
         fetch(`http://${config.server_host}:${config.server_port}/cast_filter?num_movie_low=${numOfMovie[0]}&num_movie_high=${numOfMovie[1]}` + 
             `&birth_year_low=${birthYear[0]}&birth_year_high=${birthYear[1]}` + 
             `&avg_rate_low=${avgRate[0]}&avg_rate_high=${avgRate[1]}` + 
-            `&sex=${sex}` + 
-            `&isAdult=${isAdult}`
+            `&sex=${sex}`
         )
             .then((res) => res.json())
             .then(data => {
@@ -186,11 +184,6 @@ const CastList = () => {
                     <ConfigProvider theme={{token: { colorPrimary: '#bbb'}}}>
                         <Slider className="selector" range defaultValue={[0, 11000]} max={11000} min={0} step={10}
                             onAfterChange={(e) => {setNumOfMovie(e)}}/>
-                    </ConfigProvider>
-                </div>
-                <div className="filter-item" style={{ width: '20%' }}>
-                    <ConfigProvider theme={{token: {colorPrimary: '#1677ff'}}}>
-                        <Checkbox className="selector" onChange={(e) => {setIsAdult(e.target.checked)}}> Count Only Non-Adult Content </Checkbox>
                     </ConfigProvider>
                 </div>
                 <div className="filter-item">

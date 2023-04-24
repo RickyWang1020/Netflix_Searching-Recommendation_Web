@@ -1,6 +1,8 @@
 import React from 'react';
 import './pages.css'
 import CastList from "../components/CastList";
+import DirectorList from "../components/DirectorList";
+import WriterList from "../components/WriterList";
 import ButtomBar from "../components/ButtomBar";
 
 const People = () => {

@@ -1,4 +1,4 @@
-.cast-list-container {
+.director-list-container {
     width: 100%;
     height: calc(100vh - 180px);
     padding: 0 50px;
@@ -8,14 +8,14 @@
     margin-top: 30px;
 }
 
-.cast-list-table {
+.director-list-table {
     width: 100%;
     height: fit-content;
     overflow-y: hidden;
     /* align-items: center; */
 }
 
-.cast-list-filter {
+.director-list-filter {
     /* background-color: #fff; */
     color: black;
     width: 100%;
@@ -32,7 +32,7 @@
     /* flex-direction: row; */
     align-items: center;
 }
-.cast-list-filter .title {
+.director-list-filter .title {
     height: 30px;
     line-height: 30px;
     font-size: 15px;
@@ -43,7 +43,7 @@
     margin: 0 20px;
 }
 
-.cast-list-filter .selector {
+.director-list-filter .selector {
     /* width: 200px;
     display: inline-block; */
     /* height: 30px; */
