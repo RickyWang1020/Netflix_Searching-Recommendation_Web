@@ -357,7 +357,6 @@ const cast_filter = async function(req, res) {
     const avgRateHigh = req.query.avg_rate_high ?? 5;
     const birthYearLow = req.query.birth_year_low ?? 1500;
     const birthYearHigh = req.query.birth_year_high ?? 2023;
-    const isAdult = req.query.isAdult === 'true' ? 1 : 0;
 
     let sexCondition = `(mp.category = 'actor' OR mp.category = 'actress') AND`;
     if (req.query.sex) {
@@ -374,7 +373,7 @@ const cast_filter = async function(req, res) {
         FROM merged_genre_rating r
         JOIN movie_principals mp ON r.tconst = mp.tconst
         JOIN person p ON p.nconst = mp.nconst
-        WHERE ${sexCondition} r.isAdult <= ${isAdult} AND birthYear >= ${birthYearLow} AND birthYear <= ${birthYearHigh}
+        WHERE ${sexCondition} birthYear >= ${birthYearLow} AND birthYear <= ${birthYearHigh}
         GROUP BY p.nconst
         HAVING num_movie >= ${numMovieLow} AND num_movie <= ${numMovieHigh} AND avg_rate >= ${avgRateLow} AND avg_rate <= ${avgRateHigh}
         `, (err, data) => {
@@ -398,6 +397,8 @@ const top_writer = async function(req, res) {
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
         GROUP BY p.nconst
+        ORDER BY avg_rate DESC
+        LIMIT 10;
         `, (err, data) => {
             if (err || data.length === 0) {
             console.log(err);
@@ -412,11 +413,10 @@ const top_writer = async function(req, res) {
 // Route 17: GET /writer_filter
 // Filter writer by the number of movies, whether it is adult, release year, and genre
 const writer_filter = async function(req, res) {
-    const numMovie = req.query.num_movie ?? 0;
-    const avgRate = req.query.avg_rate ?? 0;
-    const isAdult = req.query.isAdult === 'true' ? 1 : 0;
-    const releaseYearLow = req.query.release_year_low ?? 1900;
-    const releaseYearHigh = req.query.release_year_high ?? 2023;
+    const numMovieLow = req.query.num_movie_low ?? 0;
+    const numMovieHigh = req.query.num_movie_high ?? 42;
+    const avgRateLow = req.query.avg_rate_low ?? 0;
+    const avgRateHigh = req.query.avg_rate_high ?? 5;
     const birthYearHigh = req.query.birth_year_high ?? 2023;
     const birthYearLow = req.query.birth_year_low ?? 1500;
 
@@ -430,9 +430,9 @@ const writer_filter = async function(req, res) {
         FROM writer w
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
-        WHERE ${genreCondition} r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} AND birthYear >= ${birthYearLow} AND birthYear <= ${birthYearHigh}
+        WHERE ${genreCondition} birthYear >= ${birthYearLow} AND birthYear <= ${birthYearHigh}
         GROUP BY p.nconst
-        HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
+        HAVING num_movie >= ${numMovieLow} AND num_movie <= ${numMovieHigh} AND avg_rate >= ${avgRateLow} AND avg_rate <= ${avgRateHigh}
         `, (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
@@ -454,6 +454,8 @@ const top_director = async function(req, res) {
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
         GROUP BY p.nconst
+        ORDER BY avg_rate DESC
+        LIMIT 10;
         `, (err, data) => {
             if (err || data.length === 0) {
             console.log(err);
@@ -467,11 +469,10 @@ const top_director = async function(req, res) {
 // Route 19: GET /director_filter
 // Filter director by the number of movies, whether it is adult, release year, and genre
 const director_filter = async function(req, res) {
-    const numMovie = req.query.num_movie ?? 0;
-    const avgRate = req.query.avg_rate ?? 0;
-    const isAdult = req.query.isAdult === 'true' ? 1 : 0;
-    const releaseYearLow = req.query.release_year_low ?? 1900;
-    const releaseYearHigh = req.query.release_year_high ?? 2023;
+    const numMovieLow = req.query.num_movie_low ?? 0;
+    const numMovieHigh = req.query.num_movie_high ?? 36;
+    const avgRateLow = req.query.avg_rate_low ?? 0;
+    const avgRateHigh = req.query.avg_rate_high ?? 5;
     const birthYearHigh = req.query.birth_year_high ?? 2023;
     const birthYearLow = req.query.birth_year_low ?? 1500;
 
@@ -485,9 +486,9 @@ const director_filter = async function(req, res) {
         FROM director w
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
-        WHERE ${genreCondition} r.isAdult <= ${isAdult} AND r.year_of_release <= ${releaseYearHigh} AND r.year_of_release >= ${releaseYearLow} AND birthYear >= ${birthYearLow} AND birthYear <= ${birthYearHigh}
+        WHERE ${genreCondition} birthYear >= ${birthYearLow} AND birthYear <= ${birthYearHigh}
         GROUP BY p.nconst
-        HAVING num_movie >= ${numMovie} AND avg_rate >= ${avgRate}
+        HAVING num_movie >= ${numMovieLow} AND num_movie <= ${numMovieHigh} AND avg_rate >= ${avgRateLow} AND avg_rate <= ${avgRateHigh}
         `, (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
