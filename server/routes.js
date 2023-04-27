@@ -178,17 +178,18 @@ const count_top_genres = async function(req, res) {
   console.log('rate_bar: ', rate_bar);
 
   connection.query(`
-    SELECT genre, COUNT(*) as genre_count, AVG(avg_rate) as averate_rating
+    SELECT genre, COUNT(*) as genre_count, AVG(avg_rate) as average_rating
     FROM merged_genre_rating
     WHERE avg_rate >= ${rate_bar}
     GROUP BY genre
+    ORDER BY genre_count DESC
     LIMIT 5;
     `, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json({});
     } else {
-      res.json(data[0]);
+      res.json(data);
     }
   });
 };
