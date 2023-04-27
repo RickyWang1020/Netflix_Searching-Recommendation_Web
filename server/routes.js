@@ -22,7 +22,7 @@ const top_movies = async function(req, res) {
     FROM merged_genre_rating
     GROUP BY movie_id
     ORDER BY avg_rate DESC
-    LIMIT 10;
+    LIMIT 20;
   `, (err, data) => {
     if (err || data.length === 0) {
       // console.log('top_movies: 123')

@@ -46,27 +46,77 @@ const TopPeopleList = () => {
 
     return (
         <div className="top-people-list">
-            <div className="title">Top Casts/Crews</div>
-            <div className="table-container">
-            <ConfigProvider
-                theme={{
-                    token: {
-                        colorBgContainer: 'rgba(0, 0, 0, 0)',
-                        colorBorderSecondary: '#fff',
-                        fontWeightStrong: 900,
-                        // colorFillAlter: 'rgba(100, 100, 100, 0.5)',
-                        colorText: '#fff',
-                        borderRadius: '0'
-                    },
-                }}
-                >
-                    <Table 
-                        rowKey={(record) => record.uid}
-                        dataSource={data.length > 0 ? data : []} 
-                        columns={columns} 
-                        pagination={false}
-                    />
-                </ConfigProvider>
+            <div className="top-people-group">
+                <div className="title">Top Casts</div>
+                <div className="table-container">
+                <ConfigProvider
+                    theme={{
+                        token: {
+                            colorBgContainer: 'rgba(0, 0, 0, 0)',
+                            colorBorderSecondary: '#fff',
+                            fontWeightStrong: 900,
+                            // colorFillAlter: 'rgba(100, 100, 100, 0.5)',
+                            colorText: '#fff',
+                            borderRadius: '0'
+                        },
+                    }}
+                    >
+                        <Table 
+                            rowKey={(record) => record.uid}
+                            dataSource={data.length > 0 ? data : []} 
+                            columns={columns} 
+                            pagination={false}
+                        />
+                    </ConfigProvider>
+                </div>
+            </div>
+            <div className="top-people-group">
+                <div className="title">Top Crews</div>
+                <div className="table-container">
+                <ConfigProvider
+                    theme={{
+                        token: {
+                            colorBgContainer: 'rgba(0, 0, 0, 0)',
+                            colorBorderSecondary: '#fff',
+                            fontWeightStrong: 900,
+                            // colorFillAlter: 'rgba(100, 100, 100, 0.5)',
+                            colorText: '#fff',
+                            borderRadius: '0'
+                        },
+                    }}
+                    >
+                        <Table 
+                            rowKey={(record) => record.uid}
+                            dataSource={data.length > 0 ? data : []} 
+                            columns={columns} 
+                            pagination={false}
+                        />
+                    </ConfigProvider>
+                </div>
+            </div>
+            <div className="top-people-group" style={{marginBottom: '0'}}>
+                <div className="title">Top Director</div>
+                <div className="table-container">
+                <ConfigProvider
+                    theme={{
+                        token: {
+                            colorBgContainer: 'rgba(0, 0, 0, 0)',
+                            colorBorderSecondary: '#fff',
+                            fontWeightStrong: 900,
+                            // colorFillAlter: 'rgba(100, 100, 100, 0.5)',
+                            colorText: '#fff',
+                            borderRadius: '0'
+                        },
+                    }}
+                    >
+                        <Table 
+                            rowKey={(record) => record.uid}
+                            dataSource={data.length > 0 ? data : []} 
+                            columns={columns} 
+                            pagination={false}
+                        />
+                    </ConfigProvider>
+                </div>
             </div>
         </div>
     );
