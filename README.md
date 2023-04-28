@@ -17,6 +17,8 @@ Main contributors:
 
 ## Major Features
 
+- `Preprocess.ipynb` is the Jupyter Notebook for data preprocessing
+
 - Home Page
   - Recommended movies are shown as rolling posters
   - Interactive statistics display for "Top 5 Genres with Most High-Rated Movies", "Movie Average Rating Over Time by Genre", and "Movie Average Runtime Over Time by Genre"
