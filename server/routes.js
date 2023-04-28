@@ -208,6 +208,7 @@ const genre_rating_change = async function(req, res) {
     FROM merged_genre_rating
     ${genreCondition}
     GROUP BY year_of_release
+    ORDER BY year_of_release;
     `, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
@@ -232,6 +233,7 @@ const genre_runtime_change = async function(req, res) {
     FROM merged_genre_rating
     ${genreCondition}
     GROUP BY year_of_release
+    ORDER BY year_of_release;
     `, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);

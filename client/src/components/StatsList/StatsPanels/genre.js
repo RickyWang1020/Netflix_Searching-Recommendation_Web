@@ -32,28 +32,31 @@ const TopGenre = () => {
 
     return (
         <div className="stats-panel">
-            <div className="title">Top 5 Genres</div>
-            <div className="panel-body-container">
-                <Slider
-                    defaultValue={2.5}
-                    min={0}
-                    max={5}
-                    step={0.1}
-                    onChange={handleSliderChange}
-                />
+            <div className="title">Top 5 Genres with Most High-Rated Movies</div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <span style={{ display: 'inline-block' }}>Select min rating baseline: </span>
+            <Slider style={{ width: '300px', marginLeft: '50px' }}
+                defaultValue={2.5}
+                min={0}
+                max={5}
+                step={0.1}
+                onChange={handleSliderChange}
+            />
+            </div>
+                <div className="panel-body-container">
                 {(data.length === 0) ? (
                     <p>No data to display.</p>
                 ) : (
-                    <List
+                    <List 
                         itemLayout="horizontal"
                         dataSource={data}
                         renderItem={(item) => (
-                            <List.Item>
-                            <List.Item.Meta title={item.genre + item.count} />
+                            <List.Item style={{ height: '38px'}}>
+                            <List.Item.Meta title={item.genre} style={{ minWidth: 80 }} />
                             <Progress
                                 percent={(item.count / maxCount) * 100}
-                                strokeColor="#1890ff"
-                                showInfo={false}
+                                strokeColor="#9c6ceb"
+                                showInfo={true}
                                 format={() => `${item.count}`}
                             />
                             </List.Item>
