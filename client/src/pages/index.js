@@ -24,7 +24,7 @@ const panels = {
 const Home = () => {
   return (
     <div className="page-background">
-      <div className="page-container">
+      <div className="page-container" style={{padding: '80px 0'}}>
         <PosterCarousel />
         <div style={panelsContainer}>
           <StatsList style={panels} />

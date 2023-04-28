@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, ConfigProvider } from 'antd';
-import './index.css'
+import './style.css'
 const config = require('../../config.json');
 
 const TopMovieList = () => {

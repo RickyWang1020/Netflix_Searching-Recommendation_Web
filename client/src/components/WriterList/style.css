@@ -1,21 +1,21 @@
-.cast-list-container {
+.writer-list-container {
     width: 100%;
-    height: calc(100vh - 180px);
-    padding: 0 50px;
+    height: calc(100vh - 230px);
+    padding: 20px 50px 5px;
     box-sizing: border-box;
     background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(2px);
     overflow-y: scroll;
 }
 
-.cast-list-table {
+.writer-list-table {
     width: 100%;
     height: fit-content;
     overflow-y: hidden;
     /* align-items: center; */
 }
 
-.cast-list-filter {
+.writer-list-filter {
     /* background-color: #fff; */
     color: black;
     width: 100%;
@@ -32,7 +32,7 @@
     /* flex-direction: row; */
     align-items: center;
 }
-.cast-list-filter .title {
+.writer-list-filter .title {
     height: 30px;
     line-height: 30px;
     font-size: 15px;
@@ -43,7 +43,7 @@
     margin: 0 20px;
 }
 
-.cast-list-filter .selector {
+.writer-list-filter .selector {
     /* width: 200px;
     display: inline-block; */
     /* height: 30px; */

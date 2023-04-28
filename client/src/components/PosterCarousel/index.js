@@ -1,6 +1,6 @@
 import React from "react";
 import { Carousel } from 'antd';
-import "./index.css"
+import "./style.css"
 
 import poster1 from "../../assets/images/band-of-brothers.avif";
 import poster2 from "../../assets/images/house.jpeg";

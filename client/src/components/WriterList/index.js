@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Table, DatePicker, Slider, Checkbox, Button, Select, ConfigProvider } from 'antd';
+import { Table, DatePicker, Slider, Input, Button, Select, ConfigProvider } from 'antd';
 import movieGenres from '../../assets/utils/movieGenres';
-import './index.css';
+import './style.css';
 const config = require('../../config.json');
 const { RangePicker } = DatePicker;
 
@@ -12,13 +12,14 @@ const WriterList = () => {
     const [avgRate, setAvgRate] = useState([0, 5]);
     const [genre, setGenre] = useState('');
     const [birthYear, setBirthYear] = useState([1500, 2023]);
-    
     const [tableParams, setTableParams] = useState({
         pagination: {
             current: 1,
             pageSize: 10,
         },
     });
+
+    const { Search } = Input;
   
     const fetchData = () => {
         setLoading(true);
@@ -141,6 +142,7 @@ const WriterList = () => {
 
     return (
         <div className="writer-list-container">
+            <Search placeholder="Search" onSearch={value => console.log(value)} enterButton />
             <div className="writer-list-filter">
                 <div className="filter-item" style={{ width: '25%' }}>
                     <div className="title" style={{ marginLeft: '0' }}>Birth Year: </div>

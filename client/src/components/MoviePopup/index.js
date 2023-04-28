@@ -1,5 +1,5 @@
 import React, { useState, useEffect  } from "react";
-import './index.css';
+import './style.css';
 import { Rate, Progress } from 'antd';
 const config = require('../../config.json');
 
@@ -34,7 +34,6 @@ const MoviePopup = ({ movieData, onClose }) => {
             .then((res) => res.json())
             .then(data => {
                 setGenreDefeat(data);
-                console.log(data);
             }
         );
     }, []);

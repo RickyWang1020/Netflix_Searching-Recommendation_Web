@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Table, DatePicker, Slider, Checkbox, Button, Select, ConfigProvider } from 'antd';
-import './index.css';
+import { Table, DatePicker, Slider, Input, Button, Select, ConfigProvider } from 'antd';
+import './style.css';
 const config = require('../../config.json');
 const { RangePicker } = DatePicker;
 
@@ -11,13 +11,14 @@ const CastList = () => {
     const [avgRate, setAvgRate] = useState([0, 5]);
     const [sex, setSex] = useState('');
     const [birthYear, setBirthYear] = useState([1500, 2023]);
-    
     const [tableParams, setTableParams] = useState({
         pagination: {
             current: 1,
             pageSize: 10,
         },
     });
+
+    const { Search } = Input;
   
     const fetchData = () => {
         setLoading(true);
@@ -156,6 +157,7 @@ const CastList = () => {
 
     return (
         <div className="cast-list-container">
+            <Search placeholder="Search" onSearch={value => console.log(value)} enterButton />
             <div className="cast-list-filter">
                 <div className="filter-item" style={{ width: '10%' }}>
                     <div className="title" style={{ marginLeft: '0' }}>Sex: </div>

@@ -59,7 +59,7 @@ const movie_page = async function(req, res) {
 // Notes: each movie has several genres and genre can be retreived by res.json(data[1]['genre'])
 const movie = async function(req, res) {
   const movie_id = req.params.movie_id;
-  console.log('movie_id: ', movie_id);
+  // console.log('movie_id: ', movie_id);
 
   connection.query(`
     SELECT movie_id, title, year_of_release, isAdult, runtimeMinutes, genre, avg_rate
@@ -101,7 +101,7 @@ const movie_rating_distribution = async function(req, res) {
 // movie defeat percentage on each genre
 const movie_defeat = async function(req, res) {
   const movie_id = req.params.movie_id;
-  console.log('movie_id: ', movie_id);
+  // console.log('movie_id: ', movie_id);
 
   connection.query(`
     WITH genre_rating AS (
@@ -200,7 +200,7 @@ const genre_rating_change = async function(req, res) {
   if (req.params.genre) {
     genreCondition = `WHERE genre = '${req.params.genre}'`;
   }
-  console.log('genreCondition: ', genreCondition);
+  // console.log('genreCondition: ', genreCondition);
 
   connection.query(`
     SELECT year_of_release, AVG(avg_rate) as average_rating
@@ -225,7 +225,7 @@ const genre_runtime_change = async function(req, res) {
   if (req.params.genre) {
     genreCondition = `WHERE genre = '${req.params.genre}'`;
   }
-  console.log('genreCondition: ', genreCondition);
+  // console.log('genreCondition: ', genreCondition);
 
   connection.query(`
     SELECT year_of_release, AVG(runtimeMinutes) as average_runtime
@@ -250,7 +250,7 @@ const select_movies = async function(req, res) {
   if (req.params.year) {
     year = req.params.year;
   }
-  console.log('year: ', year);
+  // console.log('year: ', year);
 
   connection.query(`
     WITH max_rating_before AS (
@@ -335,7 +335,7 @@ const cast_page = async function(req, res) {
 // Select cast by nconst (may be used to pop up cast card)
 const cast = async function(req, res) {
     const nconst = req.params.nconst;
-    console.log('nconst: ', nconst);
+    // console.log('nconst: ', nconst);
 
     connection.query(`
         SELECT primaryName, avg_rate

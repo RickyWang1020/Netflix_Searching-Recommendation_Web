@@ -25,13 +25,12 @@ const People = () => {
   const [current, setCurrent] = useState('cast');
 
   const onClick = (e) => {
-    console.log('click ', e);
     setCurrent(e.key);
   };
 
   return (
     <div className="page-background">
-      <div className="page-container">
+      <div className="page-container" style={{padding: '100px 0 50px'}}>
         <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={pages} style={{background: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(2px)'}} />
         { current === 'cast' && <CastList /> }
         { current === 'director' && <DirectorList /> }

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Table, DatePicker, Slider, Checkbox, Button, Select, ConfigProvider } from 'antd';
+import { Table, DatePicker, Slider, Checkbox, Button, Select, Input, ConfigProvider } from 'antd';
 import movieGenres from '../../assets/utils/movieGenres';
-import './index.css';
 import MoviePopup from '../MoviePopup';
+import './style.css';
 const config = require('../../config.json');
 const { RangePicker } = DatePicker;
 
@@ -24,6 +24,8 @@ const MovieList = () => {
     const [popupVisible, setPopupVisible] = useState(false);
     const [popupMovieData, setPopupMovieData] = useState(null);
   
+    const { Search } = Input;
+
     const fetchData = () => {
         setLoading(true);
         fetch(`http://${config.server_host}:${config.server_port}/filter_movies`)
@@ -143,6 +145,7 @@ const MovieList = () => {
     return (
         <div>
             <div className={`movie-list-container ${popupVisible ? 'on-popup' : ''}`}>
+                <Search placeholder="Search" onSearch={value => console.log(value)} enterButton />
                 <div className="movie-list-filter">
                     <div className="filter-item" style={{ width: '25%' }}>
                         <div className="title" style={{ marginLeft: '0' }}>Year: </div>
