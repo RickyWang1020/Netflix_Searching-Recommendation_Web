@@ -4,28 +4,37 @@ import './index.css'
 const config = require('../../config.json');
 
 const TopPeopleList = () => {
-    const [data, setData] = useState([]);
+    const [castData, setCastData] = useState([]);
+    const [directorData, setDirectorData] = useState([]);
+    const [writerData, setWriterData] = useState([]);
 
     useEffect(() => {
-        fetch(`http://${config.server_host}:${config.server_port}/top_movies`)
+        fetch(`http://${config.server_host}:${config.server_port}/top_cast_rating`)
           .then(res => res.json())
-          .then(data => setData(data))
+          .then(data => setCastData(data))
           .catch(error => console.log(error));
-      }, []);
+    }, []);
+    
+    useEffect(() => {
+    fetch(`http://${config.server_host}:${config.server_port}/top_director`)
+        .then(res => res.json())
+        .then(data => setDirectorData(data))
+        .catch(error => console.log(error));
+    }, []);
+
+    useEffect(() => {
+    fetch(`http://${config.server_host}:${config.server_port}/top_writer`)
+        .then(res => res.json())
+        .then(data => setWriterData(data))
+        .catch(error => console.log(error));
+    }, []);
 
     const columns = [
         {
-            title: 'Title',
-            dataIndex: 'title',
-            key: 'title',
+            title: 'Name',
+            dataIndex: 'primaryName',
+            key: 'primaryName',
             width: '35%',
-        },
-        {
-            title: 'Year',
-            dataIndex: 'year_of_release',
-            key: 'year_of_release',
-            render: (value) => value ? `${value}` : 'N/A',
-            width: '15%',
         },
         {
             title: 'Rating',
@@ -35,9 +44,9 @@ const TopPeopleList = () => {
             width: '15%',
         },
         {
-            title: 'Genres',
-            dataIndex: 'genres',
-            key: 'genres',
+            title: 'No. of Movies',
+            dataIndex: 'num_movie',
+            key: 'num_movie',
             render: (value) => value ? `${value}` : 'N/A',
             width: '35%',
             // ellipsis: true,
@@ -63,7 +72,7 @@ const TopPeopleList = () => {
                     >
                         <Table 
                             rowKey={(record) => record.uid}
-                            dataSource={data.length > 0 ? data : []} 
+                            dataSource={castData.length > 0 ? castData : []} 
                             columns={columns} 
                             pagination={false}
                         />
@@ -71,7 +80,7 @@ const TopPeopleList = () => {
                 </div>
             </div>
             <div className="top-people-group">
-                <div className="title">Top Crews</div>
+                <div className="title">Top Directors</div>
                 <div className="table-container">
                 <ConfigProvider
                     theme={{
@@ -87,7 +96,7 @@ const TopPeopleList = () => {
                     >
                         <Table 
                             rowKey={(record) => record.uid}
-                            dataSource={data.length > 0 ? data : []} 
+                            dataSource={directorData.length > 0 ? directorData : []} 
                             columns={columns} 
                             pagination={false}
                         />
@@ -95,7 +104,7 @@ const TopPeopleList = () => {
                 </div>
             </div>
             <div className="top-people-group" style={{marginBottom: '0'}}>
-                <div className="title">Top Director</div>
+                <div className="title">Top Writers</div>
                 <div className="table-container">
                 <ConfigProvider
                     theme={{
@@ -111,7 +120,7 @@ const TopPeopleList = () => {
                     >
                         <Table 
                             rowKey={(record) => record.uid}
-                            dataSource={data.length > 0 ? data : []} 
+                            dataSource={writerData.length > 0 ? writerData : []} 
                             columns={columns} 
                             pagination={false}
                         />

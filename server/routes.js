@@ -14,7 +14,7 @@ connection.connect((err) => err && console.log(err));
 
 
 // Route 1: GET /top_movies
-// In the homepage, show fixed top 10 movies
+// In the homepage, show fixed top 20 movies
 // Notes: merged_genre_rating is already sorted by avg_rate in descending order
 const top_movies = async function(req, res) {
   connection.query(`
@@ -298,7 +298,7 @@ const top_cast = async function(req, res) {
 // In the homepage, show fixed top 10 cast by the average rating
 const top_cast_rating = async function(req, res) {
     connection.query(`
-        SELECT primaryName, avg_rate
+        SELECT primaryName, avg_rate, movie_count AS num_movie
         FROM cast_movie_rating
         LIMIT 10;
         `, (err, data) => {
@@ -359,7 +359,7 @@ const cast_filter = async function(req, res) {
     const birthYearLow = req.query.birth_year_low ?? 1500;
     const birthYearHigh = req.query.birth_year_high ?? 2023;
 
-    let sexCondition = `(mp.category = 'actor' OR mp.category = 'actress') AND`;
+    let sexCondition = `((mp.category = 'actor') OR (mp.category = 'actress')) AND`;
     if (req.query.sex) {
       if (req.query.sex === 'male') {
         sexCondition = `mp.category = 'actor' AND`;
@@ -393,7 +393,7 @@ const cast_filter = async function(req, res) {
 const top_writer = async function(req, res) {
 
     connection.query(`
-        SELECT p.primaryName AS writer_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
+        SELECT p.primaryName AS primaryName, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
         FROM writer w
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
@@ -450,7 +450,7 @@ const writer_filter = async function(req, res) {
 const top_director = async function(req, res) {
 
     connection.query(`
-        SELECT p.primaryName AS director_name, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
+        SELECT p.primaryName AS primaryName, avg_rate, COUNT(DISTINCT r.tconst) AS num_movie
         FROM director w
         JOIN merged_genre_rating r ON w.tconst = r.tconst
         JOIN person p on w.nconst = p.nconst
