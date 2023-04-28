@@ -17,8 +17,8 @@ const CastList = () => {
             pageSize: 10,
         },
     });
-
     const { Search } = Input;
+    let isInitialized = false;
   
     const fetchData = () => {
         setLoading(true);
@@ -38,7 +38,11 @@ const CastList = () => {
     };
 
     useEffect(() => {
-        fetchData();
+        if (!isInitialized) {
+            console.log("fetching cast");
+            fetchData();
+            isInitialized = true;
+        }
     }, []);
 
     const search = () => {
@@ -150,8 +154,12 @@ const CastList = () => {
     };
 
     const handleCalenderChange = (yearTuple) => {
-        if (yearTuple[0] && yearTuple[1]) {
-            setBirthYear([yearTuple[0].$y, yearTuple[1].$y]);
+        if (yearTuple === null) {
+            setBirthYear([1914, 2005]);
+        } else {
+            if (yearTuple[0] && yearTuple[1]) {
+                setBirthYear([yearTuple[0].$y, yearTuple[1].$y]);
+            }
         }
     }
 

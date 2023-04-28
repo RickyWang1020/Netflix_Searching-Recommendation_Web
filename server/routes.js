@@ -161,7 +161,7 @@ const filter_movies = async function(req, res) {
     GROUP BY movie_id;
       `, (err, data) => {
     if (err || data.length === 0) {
-      console.log(err);
+      console.log('here', err);
       res.json({});
     } else {
       res.json(data);

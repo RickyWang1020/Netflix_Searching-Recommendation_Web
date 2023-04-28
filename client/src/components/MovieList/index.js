@@ -21,8 +21,8 @@ const MovieList = () => {
     });
     const [popupVisible, setPopupVisible] = useState(false);
     const [popupMovieData, setPopupMovieData] = useState(null);
-  
     const { Search } = Input;
+    let isInitialized = false;
 
     const fetchData = () => {
         setLoading(true);
@@ -42,11 +42,18 @@ const MovieList = () => {
     };
 
     useEffect(() => {
-        fetchData();
+        if (!isInitialized) {
+            console.log("fetching movies");
+            isInitialized = true;
+            fetchData();
+        }
     }, []);
 
     const search = (movieTitle) => {
         setLoading(true);
+        if (movieTitle === undefined) {
+            movieTitle = '';
+        }
         fetch(`http://${config.server_host}:${config.server_port}/filter_movies?title=${movieTitle}` + 
             `&releaseyear_low=${yearOfRelease[0]}&releaseyear_high=${yearOfRelease[1]}` + 
             `&runtime_low=${runtime[0]}&runtime_high=${runtime[1]}` + 
@@ -135,8 +142,12 @@ const MovieList = () => {
     };
 
     const handleCalenderChange = (yearTuple) => {
-        if (yearTuple[0] && yearTuple[1]) {
-            setYearOfRelease([yearTuple[0].$y, yearTuple[1].$y]);
+        if (yearTuple === null) {
+            setYearOfRelease([1914, 2005]);
+        } else {
+            if (yearTuple[0] && yearTuple[1]) {
+                setYearOfRelease([yearTuple[0].$y, yearTuple[1].$y]);
+            }
         }
     }
 

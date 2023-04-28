@@ -18,8 +18,8 @@ const WriterList = () => {
             pageSize: 10,
         },
     });
-
     const { Search } = Input;
+    let isInitialized = false;
   
     const fetchData = () => {
         setLoading(true);
@@ -39,7 +39,11 @@ const WriterList = () => {
     };
 
     useEffect(() => {
-        fetchData();
+        if (!isInitialized) {
+            console.log("fetching writer");
+            isInitialized = true;
+            fetchData();
+        }
     }, []);
 
     const search = () => {
@@ -135,8 +139,12 @@ const WriterList = () => {
     };
 
     const handleCalenderChange = (yearTuple) => {
-        if (yearTuple[0] && yearTuple[1]) {
-            setBirthYear([yearTuple[0].$y, yearTuple[1].$y]);
+        if (yearTuple === null) {
+            setBirthYear([1914, 2005]);
+        } else {
+            if (yearTuple[0] && yearTuple[1]) {
+                setBirthYear([yearTuple[0].$y, yearTuple[1].$y]);
+            }
         }
     }
 

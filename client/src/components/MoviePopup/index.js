@@ -9,33 +9,37 @@ const MoviePopup = ({ movieData, onClose }) => {
     const [genreDefeat, setGenreDefeat] = useState([]);
     
     const desc = ['terrible', 'bad', 'normal', 'good', 'excellent'];
+    let isInitialized = false;
 
     useEffect(() => {
-        let movieId = movieData.movie_id;
-        fetch(`http://${config.server_host}:${config.server_port}/movie_id_distribution/${movieId}`)
-            .then((res) => res.json())
-            .then(data => {
-                let ratingCount = new Array(5).fill(0);
-                let sum = 0;
-                for (let i = 0; i < 5; i++) {
-                    if (data[i]) {
-                        ratingCount[data[i].rating - 1] = data[i].count;
-                        sum += data[i].count;
+        if (!isInitialized) {
+            isInitialized = true;
+            let movieId = movieData.movie_id;
+            fetch(`http://${config.server_host}:${config.server_port}/movie_id_distribution/${movieId}`)
+                .then((res) => res.json())
+                .then(data => {
+                    let ratingCount = new Array(5).fill(0);
+                    let sum = 0;
+                    for (let i = 0; i < 5; i++) {
+                        if (data[i]) {
+                            ratingCount[data[i].rating - 1] = data[i].count;
+                            sum += data[i].count;
+                        }
                     }
+                    
+                    let ratingDist = ratingCount.map((count) => (count / sum * 100).toFixed(1));
+                    
+                    setTotalRating(sum);
+                    setRatingDist(ratingDist);
                 }
-                
-                let ratingDist = ratingCount.map((count) => (count / sum * 100).toFixed(1));
-                
-                setTotalRating(sum);
-                setRatingDist(ratingDist);
-            }
-        );
-        fetch(`http://${config.server_host}:${config.server_port}/genre_defeat/${movieId}`)
-            .then((res) => res.json())
-            .then(data => {
-                setGenreDefeat(data);
-            }
-        );
+            );
+            fetch(`http://${config.server_host}:${config.server_port}/genre_defeat/${movieId}`)
+                .then((res) => res.json())
+                .then(data => {
+                    setGenreDefeat(data);
+                }
+            );
+        }
     }, []);
 
     return (
