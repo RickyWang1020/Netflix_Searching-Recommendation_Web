@@ -263,11 +263,12 @@ const select_movies = async function(req, res) {
         FROM merged_genre_rating
         WHERE year_of_release < ${year} AND avg_rate = (SELECT max_avg_rating FROM max_rating_before)
     )
-    SELECT movie_id, title, year_of_release, runtimeMinutes, avg_rate as average_rating
+    SELECT movie_id, title, year_of_release, runtimeMinutes, avg_rate as average_rating, GROUP_CONCAT(DISTINCT genre SEPARATOR ', ') AS genres
     FROM merged_genre_rating
     WHERE year_of_release >= ${year}
         AND avg_rate >= (SELECT max_avg_rating FROM max_rating_before)
-        AND runtimeMinutes >= (SELECT min_runtime FROM min_runtime_before);
+        AND runtimeMinutes >= (SELECT min_runtime FROM min_runtime_before)
+    GROUP BY movie_id;
     `, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
