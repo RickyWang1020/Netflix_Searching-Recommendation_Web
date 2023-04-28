@@ -157,7 +157,7 @@ const CastList = () => {
 
     return (
         <div className="cast-list-container">
-            <Search placeholder="Search" onSearch={value => console.log(value)} enterButton />
+            {/* <Search placeholder="Search" onSearch={value => console.log(value)} enterButton /> */}
             <div className="cast-list-filter">
                 <div className="filter-item" style={{ width: '10%' }}>
                     <div className="title" style={{ marginLeft: '0' }}>Sex: </div>

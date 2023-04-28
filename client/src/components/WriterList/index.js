@@ -142,7 +142,7 @@ const WriterList = () => {
 
     return (
         <div className="writer-list-container">
-            <Search placeholder="Search" onSearch={value => console.log(value)} enterButton />
+            {/* <Search placeholder="Search" onSearch={value => console.log(value)} enterButton /> */}
             <div className="writer-list-filter">
                 <div className="filter-item" style={{ width: '25%' }}>
                     <div className="title" style={{ marginLeft: '0' }}>Birth Year: </div>

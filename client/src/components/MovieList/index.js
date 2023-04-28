@@ -9,8 +9,6 @@ const { RangePicker } = DatePicker;
 const MovieList = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [selectedMovieId, setSelectedMovieId] = useState(null);
-    const [title, setTitle] = useState('');
     const [yearOfRelease, setYearOfRelease] = useState([1914, 2005]);
     const [runtime, setRuntime] = useState([0, 1335]);
     const [genre, setGenre] = useState('');
@@ -47,9 +45,9 @@ const MovieList = () => {
         fetchData();
     }, []);
 
-    const search = () => {
+    const search = (movieTitle) => {
         setLoading(true);
-        fetch(`http://${config.server_host}:${config.server_port}/filter_movies?title=${title}` + 
+        fetch(`http://${config.server_host}:${config.server_port}/filter_movies?title=${movieTitle}` + 
             `&releaseyear_low=${yearOfRelease[0]}&releaseyear_high=${yearOfRelease[1]}` + 
             `&runtime_low=${runtime[0]}&runtime_high=${runtime[1]}` + 
             `&genre=${genre}` + 
@@ -145,7 +143,7 @@ const MovieList = () => {
     return (
         <div>
             <div className={`movie-list-container ${popupVisible ? 'on-popup' : ''}`}>
-                <Search placeholder="Search" onSearch={value => console.log(value)} enterButton />
+                <Search placeholder="Search" onSearch={search} enterButton />
                 <div className="movie-list-filter">
                     <div className="filter-item" style={{ width: '25%' }}>
                         <div className="title" style={{ marginLeft: '0' }}>Year: </div>
