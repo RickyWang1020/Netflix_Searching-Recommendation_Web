@@ -175,7 +175,6 @@ const filter_movies = async function(req, res) {
 // show top 5 genres with count and average rating after filtering by each movie's avg_rating (e.g. 4)
 const count_top_genres = async function(req, res) {
   const rate_bar = req.params.rate_bar;
-  console.log('rate_bar: ', rate_bar);
 
   connection.query(`
     SELECT genre, COUNT(*) as genre_count, AVG(avg_rate) as average_rating
