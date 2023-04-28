@@ -21,7 +21,8 @@ const MovieList = () => {
             pageSize: 10,
         },
     });
-    const [popupVisible, setPopupVisible] = useState(true);
+    const [popupVisible, setPopupVisible] = useState(false);
+    const [popupMovieData, setPopupMovieData] = useState(null);
   
     const fetchData = () => {
         setLoading(true);
@@ -187,8 +188,7 @@ const MovieList = () => {
                             onRow={(record, rowIndex) => {
                                 return {
                                     onClick: (event) => {
-                                        console.log(event, record, rowIndex)
-                                        // dispatch(setMoviePopupData(record));
+                                        setPopupMovieData(record);
                                         setPopupVisible(true);
                                     },
                                 };
@@ -202,7 +202,7 @@ const MovieList = () => {
                     </ConfigProvider>
                 </div>
             </div>
-            {popupVisible && <MoviePopup onClose={() => setPopupVisible(false)} />}
+            {popupVisible && <MoviePopup onClose={() => setPopupVisible(false)} movieData={popupMovieData}/>}
         </div>
     );
 };
