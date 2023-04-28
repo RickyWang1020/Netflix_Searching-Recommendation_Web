@@ -1,0 +1,49 @@
+.movie-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(100, 100, 100, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.movie-popup-content {
+    width: 700px;
+    height: 500px;
+    background-color: rgba(200, 200, 200);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    color:rgba(50, 50, 50)
+}
+
+.movie-popup-close {
+    content: "";
+    background-image: url("../../assets/images/close.png");
+    background-size: contain;
+    margin: 20px;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.movie-popup-close:hover {
+    background-image: url("../../assets/images/close-hover.png");
+}
+
+.movie-popup-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: rgba(50, 50, 50);
+}

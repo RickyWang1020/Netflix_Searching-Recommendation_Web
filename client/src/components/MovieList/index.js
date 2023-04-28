@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, DatePicker, Slider, Checkbox, Button, Select, ConfigProvider } from 'antd';
 import movieGenres from '../../assets/utils/movieGenres';
 import './index.css';
+import MoviePopup from '../MoviePopup';
 const config = require('../../config.json');
 const { RangePicker } = DatePicker;
 
@@ -20,6 +21,7 @@ const MovieList = () => {
             pageSize: 10,
         },
     });
+    const [popupVisible, setPopupVisible] = useState(true);
   
     const fetchData = () => {
         setLoading(true);
@@ -138,58 +140,69 @@ const MovieList = () => {
     }
 
     return (
-        <div className="movie-list-container">
-        {/* {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />} */}
-            <div className="movie-list-filter">
-                <div className="filter-item" style={{ width: '25%' }}>
-                    <div className="title" style={{ marginLeft: '0' }}>Year: </div>
-                    <ConfigProvider theme={{token: {colorTextDisabled: '#777'}}}>
-                        <RangePicker className="selector" picker="year" 
-                            onCalendarChange={(e) => {handleCalenderChange(e)}}/>
+        <div>
+            <div className={`movie-list-container ${popupVisible ? 'on-popup' : ''}`}>
+                <div className="movie-list-filter">
+                    <div className="filter-item" style={{ width: '25%' }}>
+                        <div className="title" style={{ marginLeft: '0' }}>Year: </div>
+                        <ConfigProvider theme={{token: {colorTextDisabled: '#777'}}}>
+                            <RangePicker className="selector" picker="year" 
+                                onCalendarChange={(e) => {handleCalenderChange(e)}}/>
+                        </ConfigProvider>
+                    </div>
+                    <div className="filter-item" style={{ width: '20%' }}>
+                        <div className="title">Runtime: </div>
+                        <ConfigProvider theme={{token: { colorPrimary: '#bbb'}}}>
+                            <Slider className="selector" range defaultValue={[0, 200]} max={1335} min={0} step={5}
+                                onAfterChange={(e) => {setRuntime(e)}}/>
+                        </ConfigProvider>
+                    </div>
+                    <div className="filter-item" style={{ width: '20%' }}>
+                        <ConfigProvider theme={{token: {colorPrimary: '#1677ff'}}}>
+                            <Checkbox className="selector" onChange={(e) => {setIsAdult(e.target.checked)}}> Only Non-Adult Content </Checkbox>
+                        </ConfigProvider>
+                    </div>
+                    <div className="filter-item" style={{ width: '20%' }}>
+                        <div className="title">Genre: </div>
+                        <Select
+                            className="selector"
+                            onChange={(e) => {setGenre(e)}}
+                            options={movieGenres.map((genre, index) => ({value: genre, label: genre}))}
+                        />
+                    </div>
+                    <div className="filter-item">
+                        <Button className="selector" onClick={() => search()}>Filter</Button>
+                    </div>
+                </div>
+                <div className="movie-list-table">
+                    <ConfigProvider
+                        theme={{
+                            token: {
+                                colorFillAlter: 'rgba(100, 100, 100, 0.5)',
+                                colorFillContent: 'rgba(150, 150, 150, 0.6)',
+                                controlItemBgActive: '#444',
+                            },
+                        }}>
+                        <Table
+                            onRow={(record, rowIndex) => {
+                                return {
+                                    onClick: (event) => {
+                                        console.log(event, record, rowIndex)
+                                        // dispatch(setMoviePopupData(record));
+                                        setPopupVisible(true);
+                                    },
+                                };
+                            }}
+                            columns={columns}
+                            dataSource={data.length > 0 ? data : []}
+                            pagination={tableParams.pagination}
+                            loading={loading}
+                            onChange={handleTableChange}
+                        />
                     </ConfigProvider>
-                </div>
-                <div className="filter-item" style={{ width: '20%' }}>
-                    <div className="title">Runtime: </div>
-                    <ConfigProvider theme={{token: { colorPrimary: '#bbb'}}}>
-                        <Slider className="selector" range defaultValue={[0, 200]} max={1335} min={0} step={5}
-                            onAfterChange={(e) => {setRuntime(e)}}/>
-                    </ConfigProvider>
-                </div>
-                <div className="filter-item" style={{ width: '20%' }}>
-                    <ConfigProvider theme={{token: {colorPrimary: '#1677ff'}}}>
-                        <Checkbox className="selector" onChange={(e) => {setIsAdult(e.target.checked)}}> Only Non-Adult Content </Checkbox>
-                    </ConfigProvider>
-                </div>
-                <div className="filter-item" style={{ width: '20%' }}>
-                    <div className="title">Genre: </div>
-                    <Select
-                        className="selector"
-                        onChange={(e) => {setGenre(e)}}
-                        options={movieGenres.map((genre, index) => ({value: genre, label: genre}))}
-                    />
-                </div>
-                <div className="filter-item">
-                    <Button className="selector" onClick={() => search()}>Filter</Button>
                 </div>
             </div>
-            <div className="movie-list-table">
-                <ConfigProvider
-                    theme={{
-                        token: {
-                            colorFillAlter: 'rgba(100, 100, 100, 0.5)',
-                            colorFillContent: 'rgba(150, 150, 150, 0.6)',
-                            controlItemBgActive: '#444',
-                        },
-                    }}>
-                    <Table
-                        columns={columns}
-                        dataSource={data.length > 0 ? data : []}
-                        pagination={tableParams.pagination}
-                        loading={loading}
-                        onChange={handleTableChange}
-                    />
-                </ConfigProvider>
-            </div>
+            {popupVisible && <MoviePopup onClose={() => setPopupVisible(false)} />}
         </div>
     );
 };
