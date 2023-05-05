@@ -34,6 +34,10 @@ Main contributors:
   - For writers and directors, can filter on the range of birth year, range of average rating, number of movies written/directed, and the specific genre of their work
   - Support ascending and descending sort on `birth year`, `death year`, `number of movies/series` and `average rating` fields
 
+## Video Demo
+
+[YouTube Link](https://youtu.be/_Wl4nhkr4nI)
+
 ## Datasets for this Project
 1. [Netflix Prize Data](https://www.kaggle.com/datasets/netflix-inc/netflix-prize-data?select=README): It includes two files: combined_data.txt and movie_titles.csv. The combined_data.txt file contains information on movie ratings, including the movie ID, customer ID, rating, and date. The movie_titles.csv file contains information on the movie ID, year of release, and title.
 
